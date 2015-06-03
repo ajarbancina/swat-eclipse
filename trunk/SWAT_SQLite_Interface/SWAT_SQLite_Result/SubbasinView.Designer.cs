@@ -28,25 +28,31 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend2 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            this.components = new System.ComponentModel.Container();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.resultColumnTree1 = new SWAT_SQLite_Result.ResultColumnTree();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.splitContainer3 = new System.Windows.Forms.SplitContainer();
+            this.splitContainer4 = new System.Windows.Forms.SplitContainer();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.resultColumnTree1 = new SWAT_SQLite_Result.ResultColumnTree();
             this.swatFileList1 = new SWAT_SQLite_Result.SWATFileList();
             this.idList1 = new SWAT_SQLite_Result.IDList();
             this.compareCtrl1 = new SWAT_SQLite_Result.CompareCtrl();
             this.hruList1 = new SWAT_SQLite_Result.HRUList();
             this.seasonCtrl1 = new SWAT_SQLite_Result.SeasonCtrl();
             this.yearCtrl1 = new SWAT_SQLite_Result.YearCtrl();
-            this.splitContainer4 = new System.Windows.Forms.SplitContainer();
-            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.summaryTypeCtrl1 = new SWAT_SQLite_Result.SummaryTypeCtrl();
             this.subbasinMap1 = new SWAT_SQLite_Result.SubbasinMap();
-            this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.tableView1 = new SWAT_SQLite_Result.TableView();
             this.outputDisplayChart1 = new SWAT_SQLite_Result.OutputDisplayChart();
+            this.tabControl1 = new System.Windows.Forms.TabControl();
+            this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.tblMapData = new System.Windows.Forms.DataGridView();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -67,6 +73,10 @@
             this.groupBox3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.tableView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.outputDisplayChart1)).BeginInit();
+            this.tabControl1.SuspendLayout();
+            this.tabPage1.SuspendLayout();
+            this.tabPage2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.tblMapData)).BeginInit();
             this.SuspendLayout();
             // 
             // splitContainer1
@@ -85,14 +95,6 @@
             this.splitContainer1.Size = new System.Drawing.Size(1267, 874);
             this.splitContainer1.SplitterDistance = 205;
             this.splitContainer1.TabIndex = 0;
-            // 
-            // resultColumnTree1
-            // 
-            this.resultColumnTree1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.resultColumnTree1.Location = new System.Drawing.Point(0, 0);
-            this.resultColumnTree1.Name = "resultColumnTree1";
-            this.resultColumnTree1.Size = new System.Drawing.Size(205, 874);
-            this.resultColumnTree1.TabIndex = 0;
             // 
             // splitContainer2
             // 
@@ -134,6 +136,54 @@
             this.splitContainer3.Size = new System.Drawing.Size(1058, 705);
             this.splitContainer3.SplitterDistance = 72;
             this.splitContainer3.TabIndex = 0;
+            // 
+            // splitContainer4
+            // 
+            this.splitContainer4.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer4.Location = new System.Drawing.Point(0, 0);
+            this.splitContainer4.Name = "splitContainer4";
+            // 
+            // splitContainer4.Panel1
+            // 
+            this.splitContainer4.Panel1.Controls.Add(this.groupBox2);
+            // 
+            // splitContainer4.Panel2
+            // 
+            this.splitContainer4.Panel2.Controls.Add(this.groupBox3);
+            this.splitContainer4.Size = new System.Drawing.Size(1058, 629);
+            this.splitContainer4.SplitterDistance = 807;
+            this.splitContainer4.TabIndex = 0;
+            // 
+            // groupBox2
+            // 
+            this.groupBox2.Controls.Add(this.summaryTypeCtrl1);
+            this.groupBox2.Controls.Add(this.subbasinMap1);
+            this.groupBox2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.groupBox2.Location = new System.Drawing.Point(0, 0);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(807, 629);
+            this.groupBox2.TabIndex = 2;
+            this.groupBox2.TabStop = false;
+            this.groupBox2.Text = "Map";
+            // 
+            // groupBox3
+            // 
+            this.groupBox3.Controls.Add(this.tabControl1);
+            this.groupBox3.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.groupBox3.Location = new System.Drawing.Point(0, 0);
+            this.groupBox3.Name = "groupBox3";
+            this.groupBox3.Size = new System.Drawing.Size(247, 629);
+            this.groupBox3.TabIndex = 2;
+            this.groupBox3.TabStop = false;
+            this.groupBox3.Text = "Data";
+            // 
+            // resultColumnTree1
+            // 
+            this.resultColumnTree1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.resultColumnTree1.Location = new System.Drawing.Point(0, 0);
+            this.resultColumnTree1.Name = "resultColumnTree1";
+            this.resultColumnTree1.Size = new System.Drawing.Size(205, 874);
+            this.resultColumnTree1.TabIndex = 0;
             // 
             // swatFileList1
             // 
@@ -178,33 +228,13 @@
             this.yearCtrl1.Size = new System.Drawing.Size(207, 65);
             this.yearCtrl1.TabIndex = 10;
             // 
-            // splitContainer4
+            // summaryTypeCtrl1
             // 
-            this.splitContainer4.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer4.Location = new System.Drawing.Point(0, 0);
-            this.splitContainer4.Name = "splitContainer4";
-            // 
-            // splitContainer4.Panel1
-            // 
-            this.splitContainer4.Panel1.Controls.Add(this.groupBox2);
-            // 
-            // splitContainer4.Panel2
-            // 
-            this.splitContainer4.Panel2.Controls.Add(this.groupBox3);
-            this.splitContainer4.Size = new System.Drawing.Size(1058, 629);
-            this.splitContainer4.SplitterDistance = 807;
-            this.splitContainer4.TabIndex = 0;
-            // 
-            // groupBox2
-            // 
-            this.groupBox2.Controls.Add(this.subbasinMap1);
-            this.groupBox2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox2.Location = new System.Drawing.Point(0, 0);
-            this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(807, 629);
-            this.groupBox2.TabIndex = 2;
-            this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "Map";
+            this.summaryTypeCtrl1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.summaryTypeCtrl1.Location = new System.Drawing.Point(607, 16);
+            this.summaryTypeCtrl1.Name = "summaryTypeCtrl1";
+            this.summaryTypeCtrl1.Size = new System.Drawing.Size(194, 97);
+            this.summaryTypeCtrl1.TabIndex = 3;
             // 
             // subbasinMap1
             // 
@@ -216,6 +246,7 @@
             this.subbasinMap1.ExtendBuffer = false;
             this.subbasinMap1.FunctionMode = DotSpatial.Controls.FunctionMode.None;
             this.subbasinMap1.ID = -1;
+            this.subbasinMap1.Interval = SWAT_SQLite_Result.ArcSWAT.SWATResultIntervalType.UNKNOWN;
             this.subbasinMap1.IsBusy = false;
             this.subbasinMap1.IsZoomedToMaxExtent = false;
             this.subbasinMap1.Legend = null;
@@ -229,46 +260,77 @@
             this.subbasinMap1.Size = new System.Drawing.Size(801, 610);
             this.subbasinMap1.TabIndex = 0;
             // 
-            // groupBox3
-            // 
-            this.groupBox3.Controls.Add(this.tableView1);
-            this.groupBox3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox3.Location = new System.Drawing.Point(0, 0);
-            this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(247, 629);
-            this.groupBox3.TabIndex = 2;
-            this.groupBox3.TabStop = false;
-            this.groupBox3.Text = "Data";
-            // 
             // tableView1
             // 
             this.tableView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.tableView1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableView1.Location = new System.Drawing.Point(3, 16);
+            this.tableView1.Location = new System.Drawing.Point(3, 3);
             this.tableView1.Name = "tableView1";
             this.tableView1.ReadOnly = true;
             this.tableView1.RowHeadersVisible = false;
             this.tableView1.Season = SWAT_SQLite_Result.ArcSWAT.SeasonType.WholeYear;
-            this.tableView1.Size = new System.Drawing.Size(241, 610);
+            this.tableView1.Size = new System.Drawing.Size(227, 578);
             this.tableView1.TabIndex = 0;
             // 
             // outputDisplayChart1
             // 
-            chartArea2.Name = "ChartArea1";
-            this.outputDisplayChart1.ChartAreas.Add(chartArea2);
+            chartArea1.Name = "ChartArea1";
+            this.outputDisplayChart1.ChartAreas.Add(chartArea1);
             this.outputDisplayChart1.Dock = System.Windows.Forms.DockStyle.Fill;
-            legend2.Name = "Legend1";
-            this.outputDisplayChart1.Legends.Add(legend2);
+            legend1.Name = "Legend1";
+            this.outputDisplayChart1.Legends.Add(legend1);
             this.outputDisplayChart1.Location = new System.Drawing.Point(0, 0);
             this.outputDisplayChart1.Name = "outputDisplayChart1";
             this.outputDisplayChart1.Season = SWAT_SQLite_Result.ArcSWAT.SeasonType.WholeYear;
-            series2.ChartArea = "ChartArea1";
-            series2.Legend = "Legend1";
-            series2.Name = "Series1";
-            this.outputDisplayChart1.Series.Add(series2);
+            series1.ChartArea = "ChartArea1";
+            series1.Legend = "Legend1";
+            series1.Name = "Series1";
+            this.outputDisplayChart1.Series.Add(series1);
             this.outputDisplayChart1.Size = new System.Drawing.Size(1058, 165);
             this.outputDisplayChart1.TabIndex = 0;
             this.outputDisplayChart1.Text = "outputDisplayChart1";
+            // 
+            // tabControl1
+            // 
+            this.tabControl1.Controls.Add(this.tabPage1);
+            this.tabControl1.Controls.Add(this.tabPage2);
+            this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tabControl1.Location = new System.Drawing.Point(3, 16);
+            this.tabControl1.Name = "tabControl1";
+            this.tabControl1.SelectedIndex = 0;
+            this.tabControl1.Size = new System.Drawing.Size(241, 610);
+            this.tabControl1.TabIndex = 1;
+            // 
+            // tabPage1
+            // 
+            this.tabPage1.Controls.Add(this.tblMapData);
+            this.tabPage1.Location = new System.Drawing.Point(4, 22);
+            this.tabPage1.Name = "tabPage1";
+            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage1.Size = new System.Drawing.Size(233, 584);
+            this.tabPage1.TabIndex = 0;
+            this.tabPage1.Text = "Map";
+            this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // tabPage2
+            // 
+            this.tabPage2.Controls.Add(this.tableView1);
+            this.tabPage2.Location = new System.Drawing.Point(4, 22);
+            this.tabPage2.Name = "tabPage2";
+            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage2.Size = new System.Drawing.Size(233, 584);
+            this.tabPage2.TabIndex = 1;
+            this.tabPage2.Text = "Chart";
+            this.tabPage2.UseVisualStyleBackColor = true;
+            // 
+            // tblMapData
+            // 
+            this.tblMapData.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.tblMapData.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tblMapData.Location = new System.Drawing.Point(3, 3);
+            this.tblMapData.Name = "tblMapData";
+            this.tblMapData.Size = new System.Drawing.Size(227, 578);
+            this.tblMapData.TabIndex = 0;
             // 
             // SubbasinView
             // 
@@ -297,6 +359,10 @@
             this.groupBox3.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.tableView1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.outputDisplayChart1)).EndInit();
+            this.tabControl1.ResumeLayout(false);
+            this.tabPage1.ResumeLayout(false);
+            this.tabPage2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.tblMapData)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -319,5 +385,10 @@
         private CompareCtrl compareCtrl1;
         private IDList idList1;
         private SWATFileList swatFileList1;
+        private SummaryTypeCtrl summaryTypeCtrl1;
+        private System.Windows.Forms.TabControl tabControl1;
+        private System.Windows.Forms.TabPage tabPage1;
+        private System.Windows.Forms.TabPage tabPage2;
+        private System.Windows.Forms.DataGridView tblMapData;
     }
 }

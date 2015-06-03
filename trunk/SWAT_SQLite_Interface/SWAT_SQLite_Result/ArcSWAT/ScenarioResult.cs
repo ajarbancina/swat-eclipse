@@ -313,8 +313,83 @@ namespace SWAT_SQLite_Result.ArcSWAT
 
         #endregion        
 
+        #region (Average) Annual Results for each reach and subbasin to be displayed on map
+        //Calculating the (avearage) annual results from daily results takes much more time when they are calculated one (subassin/reach) by one.
+        //The bottle neck is the querying the results for each subbasin. If there are 20 subbasins, the similar SQL needs to be executed 20 times
+        //With only one SQL query, the approach here would save a lot time and improve efficiency.
+
+        /// <summary>
+        /// Cache for (average) annual results.
+        /// </summary>
+        /// <remarks>This is usually for daily output</remarks>
+        private Dictionary<string, Dictionary<int, double>> _avgAnnualResults = new Dictionary<string, Dictionary<int, double>>();
+
+        /// <summary>
+        /// Calculate (average) annual results
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="col"></param>
+        /// <param name="year">-1 means all years, the average annual will be calculated</param>
+        /// <returns></returns>
+        /// <remarks>It works best for daily output. No calculation is required for yearly output.</remarks>
+        public Dictionary<int, double> getAverageAnnualResults(SWATUnitType type, string col,int year)
+        {
+            //look in the cache first
+            string result_id = string.Format("averageannual_{0}_{1}_{2}", type, col, year);
+            if (!_avgAnnualResults.ContainsKey(result_id))
+            {
+                //get outputs for all subbasins/reaches with given column
+                string sql = string.Format("select {0},{1},{2} from [{3}]", 
+                    ScenarioResultStructure.COLUMN_NAME_YEAR, type, col,type);
+                if (type == SWATUnitType.SUB)
+                {
+                    if(col.Equals(ScenarioResultStructure.SUBBAIN_TOTAL_NITROGEN_COLUMN))
+                        sql = string.Format("select {0},{1},{2} as {3} from [{4}]",
+                                ScenarioResultStructure.COLUMN_NAME_YEAR, type, ScenarioResultStructure.SUBBAIN_NITROGEN_COLUMNS_SQL, col, type);
+                    else if (col.Equals(ScenarioResultStructure.SUBBAIN_TOTAL_PHOSPHORUS_COLUMN))
+                        sql = string.Format("select {0},{1},{2} as {3} from [{4}]",
+                                ScenarioResultStructure.COLUMN_NAME_YEAR, type, ScenarioResultStructure.SUBBAIN_PHOSPHORUS_COLUMNS_SQL, col, type);
+                }
+                DataTable dt = GetDataTable(sql);
+
+                //summary the result by year and id
+                //for reach flow, average operation should be used
+                var query = from oneresult in dt.AsEnumerable()                        
+                            group oneresult by new { 
+                                Year = oneresult.Field<int>(ScenarioResultStructure.COLUMN_NAME_YEAR),  //group by year
+                                ID = oneresult.Field<int>(type.ToString())                              //group by id
+                            } into g
+                            select new
+                            {
+                                ID = g.Key.ID,
+                                Year = g.Key.Year,                            
+                                Total = g.Sum(oneresult => oneresult.Field<double>(col)),
+                            };
+
+
+                Dictionary<int, double> results = new Dictionary<int, double>();
+                //calculate the average annual
+                if (year == -1)
+                {
+                    int numofyear = EndYear - StartYear;                    
+                    foreach (var oneyearid in query)
+                    {
+                        //Debug.WriteLine(String.Format("{0}:{1}", oneyearid.ID, oneyearid.Year));
+                        if (!results.ContainsKey(oneyearid.ID))
+                            results.Add(oneyearid.ID, 0.0);
+                        results[oneyearid.ID] += oneyearid.Total / numofyear; //get the average
+                    }                    
+                }
+                _avgAnnualResults.Add(result_id, results);
+            }
+
+            return _avgAnnualResults[result_id];
+        }
+
+        #endregion
+
         #region Performance Table
-       
+
         private Dictionary<string, DataTable> _performanceTables = new Dictionary<string, DataTable>();
 
         private void getPerformanceTableForType(int splitYear, bool withSplitYear, DataTable dt, SWATUnitType type, StatisticCompareType statisticType)

@@ -19,17 +19,32 @@ namespace SWAT_SQLite_Result
     /// </summary>
     class SubbasinMap : Map
     {
-        private static string RESULT_COLUMN = "RESULT";
-        private static string OBSERVED_COLUMN = "OBSERVED";
-        private static string ID_COLUMN_NAME = "subbasin";
+        public static string RESULT_COLUMN = "RESULT";
+        public static string OBSERVED_COLUMN = "OBSERVED";
+        public static string ID_COLUMN_NAME = "subbasin";
 
         private ArcSWAT.Project _project = null;
         private ArcSWAT.ScenarioResult _scenario = null;
         private IFeatureLayer _workingLayer = null;
         public event LayerSelectionChangedEventHandler onLayerSelectionChanged = null;
         private ArcSWAT.SWATUnitType _type = ArcSWAT.SWATUnitType.UNKNOWN;
+        private string _resultColumn = "";
+        private ArcSWAT.ResultSummaryType _summaryType = ArcSWAT.ResultSummaryType.AVERAGE_ANNUAL;
+        private DateTime _resultDate = DateTime.Now;
         private Dictionary<int, ArcSWAT.SWATUnit> _unitList = null;
         private ArcSWAT.SWATResultIntervalType _interval = ArcSWAT.SWATResultIntervalType.UNKNOWN;
+
+        public SubbasinMap()
+        {
+            //context menu
+            System.Windows.Forms.ToolStripMenuItem exportMenu =
+                new System.Windows.Forms.ToolStripMenuItem("Export current results to CSV");
+            exportMenu.Click += (ss, _e) => { export(); };
+
+
+            this.ContextMenuStrip = new System.Windows.Forms.ContextMenuStrip();
+            this.ContextMenuStrip.Items.Add(exportMenu);
+        }
 
         /// <summary>
         /// For project view
@@ -46,6 +61,41 @@ namespace SWAT_SQLite_Result
             //add layers
             drawObservationLayers();
             this.FunctionMode = DotSpatial.Controls.FunctionMode.Select;
+        }
+
+        private void export()
+        {
+            if (_workingLayer == null) return;
+            DataTable dt = _workingLayer.DataSet.DataTable;
+            int resultIndex = dt.Columns.IndexOf(RESULT_COLUMN);
+            if (resultIndex == -1) return;
+            int idIndex = dt.Columns.IndexOf(ID_COLUMN_NAME);
+
+            string csvPath = SWAT_SQLite.InstallationFolder + @"exports\";
+            if (!System.IO.Directory.Exists(csvPath)) System.IO.Directory.CreateDirectory(csvPath);
+            csvPath += string.Format("export_map_{0:yyyyMMddhhmmss}.csv", DateTime.Now);
+            using (System.IO.StreamWriter writer = new System.IO.StreamWriter(csvPath))
+            {
+                //write summary type
+                writer.WriteLine(_summaryType);
+
+                //write time range
+                if (_summaryType == ArcSWAT.ResultSummaryType.ANNUAL)
+                    writer.WriteLine(_resultDate.Year);
+                else if (_summaryType == ArcSWAT.ResultSummaryType.TIMESTEP)
+                    writer.WriteLine("yyyy-MM-dd", _resultDate);
+                else
+                    writer.WriteLine(string.Format("{0} - {1}", _scenario.StartYear, _scenario.EndYear));
+
+                //write header
+                writer.WriteLine(string.Format("{0},{1}", _type, _resultColumn));
+
+                //write the real data
+                foreach (DataRow r in dt.Rows)
+                {
+                    writer.WriteLine(string.Format("{0},{1}", r[idIndex], r[resultIndex]));
+                }
+            }
         }
 
         private void drawObservationLayers()
@@ -370,7 +420,8 @@ namespace SWAT_SQLite_Result
         /// update corresponding layer 
         /// </summary>
         /// <param name="type"></param>
-        public void drawLayer(string resultType, string col, DateTime date)
+        public void drawLayer(string resultType, string col, 
+            DateTime date, ArcSWAT.ResultSummaryType summaryType)
         {
             if (_type != ArcSWAT.SWATUnitType.SUB && _type != ArcSWAT.SWATUnitType.RCH) return;
             if (_workingLayer == null) return;
@@ -380,7 +431,11 @@ namespace SWAT_SQLite_Result
                 if (_type == ArcSWAT.SWATUnitType.RCH) _unitList = _scenario.Reaches;
             }
             if (_unitList == null) return;
-            
+
+            _resultColumn = col;
+            _summaryType = summaryType;
+            _resultDate = date;
+
             Debug.WriteLine("Draw Layer, " + _workingLayer.LegendText);
             Debug.WriteLine("Getting results...");
             DateTime d = DateTime.Now;
@@ -388,20 +443,38 @@ namespace SWAT_SQLite_Result
             DataTable dt = _workingLayer.DataSet.DataTable;
             int resultIndex = dt.Columns.IndexOf(RESULT_COLUMN);
             int idIndex = dt.Columns.IndexOf(ID_COLUMN_NAME);
-            foreach (DataRow r in dt.Rows)
+            if (summaryType == ArcSWAT.ResultSummaryType.AVERAGE_ANNUAL)
             {
-                r[resultIndex] = ArcSWAT.ScenarioResultStructure.EMPTY_VALUE;
+                Dictionary<int, double> ave_annual = _scenario.getAverageAnnualResults(_type, col, -1);
+                foreach (DataRow r in dt.Rows)
+                {
+                    r[resultIndex] = ArcSWAT.ScenarioResultStructure.EMPTY_VALUE;
 
-                int id = int.Parse(r[idIndex].ToString());
-                if (!_unitList.ContainsKey(id)) continue;
+                    int id = int.Parse(r[idIndex].ToString());
+                    r[resultIndex] = ave_annual[id];
+                }
+            }
+            else
+            {
+                foreach (DataRow r in dt.Rows)
+                {
+                    r[resultIndex] = ArcSWAT.ScenarioResultStructure.EMPTY_VALUE;
 
-                ArcSWAT.SWATUnit unit = _unitList[id];
-                if (!unit.Results.ContainsKey(resultType)) continue;
+                    int id = int.Parse(r[idIndex].ToString());
+                    if (!_unitList.ContainsKey(id)) continue;
 
-                ArcSWAT.SWATUnitResult result = unit.Results[resultType];
-                if (!result.Columns.Contains(col)) continue;
+                    ArcSWAT.SWATUnit unit = _unitList[id];
+                    if (!unit.Results.ContainsKey(resultType)) continue;
 
-                r[resultIndex] = result.getData(col, date);
+                    ArcSWAT.SWATUnitResult result = unit.Results[resultType];
+                    if (!result.Columns.Contains(col)) continue;
+
+
+                    if (summaryType == ArcSWAT.ResultSummaryType.TIMESTEP)
+                        r[resultIndex] = result.getData(col, date);
+                    else if (summaryType == ArcSWAT.ResultSummaryType.ANNUAL)   //annual 
+                        r[resultIndex] = result.getData(col, date.Year);
+                 }
             }
 
             Debug.WriteLine(DateTime.Now.Subtract(d).TotalMilliseconds);
@@ -415,7 +488,18 @@ namespace SWAT_SQLite_Result
 
             ////update chart
             //onLayerSelectionChanged(type);
+            if (onMapUpdated != null) onMapUpdated(this, new EventArgs());
         }
+
+        public DataTable DataTable
+        {
+            get
+            {
+                return _workingLayer.DataSet.DataTable;
+            }
+        }
+
+        public event EventHandler onMapUpdated;
 
         private void setLayerSchema(IFeatureLayer layer)
         {

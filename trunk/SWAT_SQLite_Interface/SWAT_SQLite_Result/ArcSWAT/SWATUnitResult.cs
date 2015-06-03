@@ -37,7 +37,80 @@ namespace SWAT_SQLite_Result.ArcSWAT
             ScenarioResultStructure.COLUMN_NAME_YEAR + "={2} and "+
             ScenarioResultStructure.COLUMN_NAME_MONTH +"={3} and "+
             ScenarioResultStructure.COLUMN_NAME_DAY +  "={4} and {5}={6}";
-            
+
+        /// <summary>
+        /// Calculate average annual results for given column
+        /// </summary>
+        /// <param name="col"></param>
+        /// <returns></returns>
+        public double getData(string col)
+        {
+            DataTable dt = getDataTable(col);
+
+            //determine right summary method based on result type 
+            //string summary = "sum";
+            //if (_unit.Type == SWATUnitType.RCH && System.Array.IndexOf(ScenarioResultStructure.REACH_UNIT_COLUMNS, col.ToLower()) > -1)
+            //    summary = "avg";
+
+            var query = from oneresult in dt.AsEnumerable()
+                        group oneresult by "YR" into g
+                        select new 
+                        {
+                            Year = g.Key,
+                            Total = g.Sum(oneresult => oneresult.Field<double>(col)),
+                        };
+
+            double avg = 0.0;
+            double num = 0;
+            foreach (var oneyear in query)
+            {
+                avg += oneyear.Total;
+                num += 1;
+            }
+            return avg / num;
+
+            //int startYear = _unit.Scenario.StartYear;
+            //int endYear = _unit.Scenario.EndYear;
+
+            //double avg = 0.0;
+            //for (int i = startYear; i <= endYear; i++)
+            //{
+            //    double v = getData(col, i);
+            //    if (v == ScenarioResultStructure.EMPTY_VALUE)
+            //    {
+            //        System.Diagnostics.Debug.WriteLine(string.Format("No annual value for year {0}",i));
+            //        continue;
+            //    }
+            //    avg += v;
+            //}
+            //return avg / (endYear - startYear + 1);
+        }
+
+        /// <summary>
+        /// Calculate annual result for given column in given year. If the output interval is yearly, it's same as getData(string col, DateTime date). 
+        /// For monthly and daily output, a table needs to be read first.
+        /// 
+        /// How to get the yearly value will be based on output. For flow, it will be average. For load, it will be total.
+        /// </summary>
+        /// <param name="col"></param>
+        /// <param name="year"></param>
+        /// <returns></returns>
+        public double getData(string col, int year)
+        {
+            if (_interval == SWATResultIntervalType.YEARLY) return getData(col, new DateTime(year, 1, 1));
+
+            DataTable dt = getDataTable(col, year);
+
+            //determine right summary method based on result type 
+            string summary = "sum";
+            if (_unit.Type == SWATUnitType.RCH && System.Array.IndexOf(ScenarioResultStructure.REACH_UNIT_COLUMNS, col.ToLower()) > -1)
+                summary = "avg";
+
+            object value = dt.Compute(string.Format("{0}({1})", summary, col), "");
+            if (value == null || value.ToString().Trim().Length == 0) return ScenarioResultStructure.EMPTY_VALUE;
+            return double.Parse(value.ToString());            
+        }
+    
         /// <summary>
         /// read result for given column and date
         /// </summary>

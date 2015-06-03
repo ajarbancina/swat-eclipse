@@ -28,6 +28,7 @@ namespace SWAT_SQLite_Result
         private ArcSWAT.Project _project = null;
         private ArcSWAT.ScenarioResult _scenario = null;
         private ArcSWAT.SWATUnitType _type = ArcSWAT.SWATUnitType.UNKNOWN;
+        private ArcSWAT.ResultSummaryType _summaryType = ArcSWAT.ResultSummaryType.ANNUAL;
         private Dictionary<int, ArcSWAT.SWATUnit> _unitList = null;
 
         /// <summary>
@@ -51,8 +52,10 @@ namespace SWAT_SQLite_Result
         public event EventHandler onDataStatisticsChanged = null;
 
         public DateTime MapTime { get { return _date; } }
+        public ArcSWAT.ResultSummaryType SummaryType { get { return _summaryType; } }
         public ArcSWAT.SWATUnit MapSelection { get { return _unit; } }
         public string Statistics { get { return _statistics; } }
+        public ArcSWAT.ScenarioResult ScenarioResult { get { return _scenario; } }
 
         public void setProjectScenario(ArcSWAT.Project project, ArcSWAT.ScenarioResult scenario,ArcSWAT.SWATUnitType type)
         {
@@ -97,14 +100,45 @@ namespace SWAT_SQLite_Result
             else
                 idList1.IDs = scenario.getSWATUnitIDs(type);
 
-            idList1.onIDChanged += (s, e) => { onIDChanged(idList1.ID); subbasinMap1.ID = idList1.ID; };
+            idList1.onIDChanged += (s, e) => { onIDChanged(idList1.ID); subbasinMap1.ID = idList1.ID; setMapTalbeIDSelection(idList1.ID); };
             
             //season control
             seasonCtrl1.onSeasonTypeChanged += (s, e) => { tableView1.Season = seasonCtrl1.Season; outputDisplayChart1.Season = seasonCtrl1.Season; updateTableAndChart(); };
 
             //year control
             yearCtrl1.Scenario = scenario;
-            yearCtrl1.onYearChanged += (s, e) => { updateTableAndChart(); };
+            yearCtrl1.onYearChanged += (s, e) => 
+            { 
+                //update the summary type control
+                summaryTypeCtrl1.CurrentYear = yearCtrl1.Year;
+
+                //update the time step map view and summary control
+                if (yearCtrl1.Year != -1)
+                {
+                    _date = new DateTime(yearCtrl1.Year, 1, 1);
+                    summaryTypeCtrl1.TimeForTimeStep = _date;
+
+                    //update the status bar
+                    if (onMapTimeChanged != null)
+                        onMapTimeChanged(this, new EventArgs());
+                }
+
+                //update map               
+                if(_summaryType != ArcSWAT.ResultSummaryType.AVERAGE_ANNUAL) //only update map when it's not average annual
+                    this.updateMap(); 
+
+                updateTableAndChart(); 
+            };
+
+            //summary type control for map
+            summaryTypeCtrl1.ScenarioResult = scenario;
+            summaryTypeCtrl1.onSummaryTypeChanged += (s, e) =>
+            {
+                _summaryType = summaryTypeCtrl1.SummaryType;
+                this.updateMap();                     //update the status bar
+                if (onMapTimeChanged != null)
+                    onMapTimeChanged(this, new EventArgs());
+            };
 
             //only for subbasin to show hru list
             hruList1.Visible = (type == ArcSWAT.SWATUnitType.SUB || type == ArcSWAT.SWATUnitType.HRU);
@@ -145,9 +179,40 @@ namespace SWAT_SQLite_Result
             };
             resultColumnTree1.setScenarioAndUnit(scenario, type);
 
+            //the id selection changed
+            tblMapData.RowHeadersVisible = false;
+            tblMapData.ReadOnly = true;
+            tblMapData.RowEnter += (s, e) =>
+                {
+                    if (e.RowIndex < 0 || tblMapData.Rows[e.RowIndex].Cells[0].Value == null) return;
+                    int id = int.Parse(tblMapData.Rows[e.RowIndex].Cells[0].Value.ToString());
+                    
+                    onIDChanged(id); 
+                    idList1.ID = id;
+                    subbasinMap1.ID = id;
+                };
+
             //map            
-            subbasinMap1.onLayerSelectionChanged += (unitType, id) => { onIDChanged(id); idList1.ID = id; };
+            subbasinMap1.onLayerSelectionChanged += (unitType, id) => { onIDChanged(id); idList1.ID = id; setMapTalbeIDSelection(id); };
             subbasinMap1.setProjectScenario(project, scenario, type);
+            subbasinMap1.onMapUpdated += (s, e) => 
+            {
+                this.tblMapData.DataSource = subbasinMap1.DataTable;
+                foreach (DataGridViewColumn col in tblMapData.Columns)
+                {
+                     col.Visible = col.Name.Equals(SubbasinMap.ID_COLUMN_NAME) ||
+                        col.Name.Equals(SubbasinMap.RESULT_COLUMN);
+                     if (col.Name.Equals(SubbasinMap.RESULT_COLUMN))
+                     {
+                         col.DefaultCellStyle.Format = "F4";
+                         col.HeaderText = _col;
+                     }
+                     else if (col.Name.Equals(SubbasinMap.ID_COLUMN_NAME))
+                     {
+                         col.HeaderText = _resultType.ToString().ToLower();
+                     }
+                }
+            };
 
             //chart export
             outputDisplayChart1.onExport += (s, e) =>
@@ -160,9 +225,12 @@ namespace SWAT_SQLite_Result
             { 
                 if (_type == ArcSWAT.SWATUnitType.HRU) return; 
                 _date = d;
+                summaryTypeCtrl1.TimeForTimeStep = d;
+
                 if (onMapTimeChanged != null)
                     onMapTimeChanged(this, new EventArgs());
-                updateMap(); 
+                if(_summaryType == ArcSWAT.ResultSummaryType.TIMESTEP)
+                    updateMap(); 
             };
 
             //compare control
@@ -176,6 +244,25 @@ namespace SWAT_SQLite_Result
             //update
             updateMap();
             updateTableAndChart();
+
+            //update the status bar
+            if (onMapTimeChanged != null)
+                onMapTimeChanged(this, new EventArgs());
+        }
+
+        /// <summary>
+        /// Select the row correponding to given id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <remarks>The ID selection in IDList, Map and TableMap is now connected.</remarks>
+        private void setMapTalbeIDSelection(int id)
+        {
+            foreach (DataGridViewRow r in tblMapData.Rows)
+            {
+                if (r.Cells[0].Value == null) continue;
+                int currentId = int.Parse(r.Cells[0].Value.ToString());
+                r.Selected = currentId == id;
+            }          
         }
 
         public void onIDChanged(int id)
@@ -225,7 +312,17 @@ namespace SWAT_SQLite_Result
         {
             if (_type == ArcSWAT.SWATUnitType.HRU) return;
             if (_resultType == null || _col == null) return;
-            subbasinMap1.drawLayer(_resultType, _col, _date);
+
+            //consider the result summary type in map
+            int year = yearCtrl1.Year;
+            _summaryType = summaryTypeCtrl1.SummaryType;
+            if (year == -1 && _summaryType == ArcSWAT.ResultSummaryType.ANNUAL)
+                _summaryType = ArcSWAT.ResultSummaryType.AVERAGE_ANNUAL;
+
+            if (_summaryType == ArcSWAT.ResultSummaryType.ANNUAL)
+                subbasinMap1.drawLayer(_resultType, _col, new DateTime(year, 1, 1), _summaryType);
+             else
+                subbasinMap1.drawLayer(_resultType, _col, _date, _summaryType);
         }
 
         private void updateTableAndChart()
@@ -247,7 +344,7 @@ namespace SWAT_SQLite_Result
             int year = -1;
             if ((result.Interval == ArcSWAT.SWATResultIntervalType.DAILY || result.Interval == ArcSWAT.SWATResultIntervalType.MONTHLY) && yearCtrl1.DisplayByYear)
                 year = yearCtrl1.Year;
-
+            
             //current working result
             ArcSWAT.SWATUnitColumnYearResult oneResult = result.getResult(_col, year);
 
@@ -260,7 +357,8 @@ namespace SWAT_SQLite_Result
                 if (oneResult.Table.Rows.Count == 0 && _type == ArcSWAT.SWATUnitType.HRU)
                     MessageBox.Show("No results for HRU " + _unit.ID.ToString() + ". For more results, please modify file.cio.");
 
-                this.tableView1.Result = oneResult;
+                //remove temporarily to improve performance
+                //this.tableView1.Result = oneResult; 
                 this.outputDisplayChart1.Result = oneResult;
                 this._statistics = oneResult.SeasonStatistics(seasonCtrl1.Season).ToString();
                 if(oneResult.ObservedData != null)
@@ -303,7 +401,8 @@ namespace SWAT_SQLite_Result
                         compare = oneResult.CompareWithObserved;
                         this._statistics = compare.SeasonStatistics(seasonCtrl1.Season).ToString();
                     }
-                    this.tableView1.CompareResult = compare;
+                    //remove temporarily to improve performance
+                    //this.tableView1.CompareResult = compare;
                     this.outputDisplayChart1.CompareResult = compare;                    
                     if (onDataStatisticsChanged != null)
                         onDataStatisticsChanged(this, new EventArgs());
