@@ -114,12 +114,35 @@ namespace SWAT_SQLite_Result.ArcSWAT
 
         #endregion
 
+        /// <summary>
+        /// If it's corresponding to subbason TN
+        /// </summary>
+        private bool IsSubbasinTotalN
+        {
+            get { return _result.Unit.Type == SWATUnitType.SUB && _col.Equals(ScenarioResultStructure.SUBBAIN_TOTAL_NITROGEN_COLUMN); }
+        }
+
+        /// <summary>
+        /// If it's corresponding to subbasin TP
+        /// </summary>
+        private bool IsSubbasinTotalP
+        {
+            get { return _result.Unit.Type == SWATUnitType.SUB && _col.Equals(ScenarioResultStructure.SUBBAIN_TOTAL_PHOSPHORUS_COLUMN); }
+        }
+
         protected override void read()
         {
             if (_table != null) return;
 
             //check the column name
-            if (!_result.Columns.Contains(_col)) _table = new DataTable();
+            if (!_result.Columns.Contains(_col))
+            {
+                if (!IsSubbasinTotalN && !IsSubbasinTotalP)
+                {
+                    _table = new DataTable();
+                    return;
+                }
+            }
 
             //add codes to output reading time for test
             DateTime readStartTime = DateTime.Now;
@@ -132,7 +155,15 @@ namespace SWAT_SQLite_Result.ArcSWAT
             //get return columns based on interval
             string cols = ScenarioResultStructure.getDateColumns(_result.Interval);
             if (cols.Length > 0) cols += ",";
-            cols += _col;
+
+            //consider subbasin TN/TP
+            if(IsSubbasinTotalN)
+                cols += string.Format("{0} as {1}",ScenarioResultStructure.SUBBAIN_NITROGEN_COLUMNS_SQL, _col);
+            else if(IsSubbasinTotalP)
+                cols += string.Format("{0} as {1}",ScenarioResultStructure.SUBBAIN_PHOSPHORUS_COLUMNS_SQL, _col);
+            else
+                cols += _col;
+
             if (HasLanduseColumn)
                 cols += "," + ScenarioResultStructure.COLUMN_NAME_HRU_LANDUSE;
             if(HasMgtOperationColumn)

@@ -24,6 +24,7 @@ namespace SWAT_SQLite_Result.ArcSWAT
         private Dictionary<string, double> _rmse = new Dictionary<string, double>();
         private Dictionary<string, double> _cvrmse = new Dictionary<string, double>();
         private Dictionary<string, double> _nrmse = new Dictionary<string, double>();
+        private Dictionary<string, double> _sum_ratio = new Dictionary<string, double>();
         private SWATUnitColumnYearCompareResult _result = null;
         private SeasonType _season = SeasonType.WholeYear;
 
@@ -52,6 +53,14 @@ namespace SWAT_SQLite_Result.ArcSWAT
                 default:
                     return ScenarioResultStructure.EMPTY_VALUE;
             }
+        }
+
+        private double SumRatio(string filter)
+        {
+            if (!_sum_ratio.ContainsKey(filter))
+                _sum_ratio.Add(filter, CalculateSumRatio(_result.SeasonTableForStatistics(_season),
+                    _result.ChartColumns[1], _result.ChartColumns[0], filter));
+            return _sum_ratio[filter];
         }
 
         private double R2(string filter)
@@ -252,6 +261,23 @@ namespace SWAT_SQLite_Result.ArcSWAT
             return nrmse;
         }
 
+        private static double CalculateSumRatio(DataTable dt, string col_observed, string col_simulated, string filter)
+        {
+            //consider missing value in observed data
+            //some year just doesn't have data
+            if (dt == null || dt.Rows.Count == 0)
+                return ScenarioResultStructure.EMPTY_VALUE;
+
+            double sum_observed = Sum(dt, col_observed, filter);
+            double sum_simulated = Sum(dt, col_simulated, filter);
+
+            //see if all values in the time series are 0
+            if (sum_simulated == 0 || sum_observed == 0)
+                return 0.0;
+
+            return sum_simulated / sum_observed;
+        }
+
         private static double CalculateR2(DataTable dt, string col_observed, string col_simulated,string filter)
         {
             //consider missing value in observed data
@@ -326,7 +352,7 @@ namespace SWAT_SQLite_Result.ArcSWAT
 
         public override string ToString()
         {
-            return string.Format("R2 = {0:F4}; NSE = {1:F4}",R2(""),NSE(""));
+            return string.Format("R2 = {0:F4}; NSE = {1:F4}; SUM Ratio = {2:F4}",R2(""),NSE(""), SumRatio(""));
         }
 
         public string ToString(int splitYear)

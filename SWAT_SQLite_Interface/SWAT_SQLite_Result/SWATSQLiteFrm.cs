@@ -177,9 +177,23 @@ namespace SWAT_SQLite_Result
         private void onMapTimeChanged(UserControl view) 
         {
             if (view != null && view is SubbasinView)
-                lblMapTime.Text = string.Format("Map Display Time: {0:yyyy-MM-dd}", (view as SubbasinView).MapTime);
+            {
+                ArcSWAT.ResultSummaryType type = (view as SubbasinView).SummaryType;
+                if (type == ArcSWAT.ResultSummaryType.AVERAGE_ANNUAL)
+                    lblMapTime.Text = "Map Display: Average Annual";
+                else if (type == ArcSWAT.ResultSummaryType.ANNUAL)
+                    lblMapTime.Text = "Map Display: Annual " + (view as SubbasinView).MapTime.Year.ToString();
+                else
+                {
+                    if((view as SubbasinView).ScenarioResult.Interval == ArcSWAT.SWATResultIntervalType.DAILY)
+                        lblMapTime.Text = string.Format("Map Display: {0:yyyy-MM-dd}", (view as SubbasinView).MapTime);
+                    else if ((view as SubbasinView).ScenarioResult.Interval == ArcSWAT.SWATResultIntervalType.MONTHLY)
+                        lblMapTime.Text = string.Format("Map Display: {0:yyyy-MM-dd}", (view as SubbasinView).MapTime);
+                }
+                    
+            }
             else
-                lblMapTime.Text = "Map Display Time:";
+                lblMapTime.Text = "Map Display:";
         }
 
         private void onMapSelectionChanged(UserControl view)

@@ -116,6 +116,22 @@ namespace SWAT_SQLite_Result.ArcSWAT
         public static string DATE_COLUMNS_MONTHLY = DATE_COLUMNS_YEARLY + "," + COLUMN_NAME_MONTH;
         public static string DATE_COLUMNS_DAILY = DATE_COLUMNS_MONTHLY + "," + COLUMN_NAME_DAY;
 
+        //subbasin columns that related to TN/TP calculation
+        public static string[] SUBBAIN_NITROGEN_COLUMNS = new string[]{
+                    "ORGNkg_ha","LATNO3kg_h","GWNO3kg_ha","TNO3kg_ha"};
+        public static string SUBBAIN_NITROGEN_COLUMNS_SQL = "ORGNkg_ha + LATNO3kg_h + GWNO3kg_ha + TNO3kg_ha";
+        public static string[] SUBBAIN_PHOSPHORUS_COLUMNS = new string[]{
+                    "ORGPkg_ha","SEDPkg_ha","SOLPkg_ha"};
+        public static string SUBBAIN_PHOSPHORUS_COLUMNS_SQL = "ORGPkg_ha + SEDPkg_ha + SOLPkg_ha";
+        public static string SUBBAIN_TOTAL_NITROGEN_COLUMN = "TNkg_ha";
+        public static string SUBBAIN_TOTAL_PHOSPHORUS_COLUMN = "TPkg_ha";
+
+        //reach columns which should be summaried with average
+        //other columns will be summaried with sum as they are loading
+        //all columns in hru, sub and reservoir will use sum
+        public static string[] REACH_UNIT_COLUMNS = new string[] { "flow_incms", "flow_outcms", "evapcms", "tlosscms" };
+
+
         #endregion
 
         public ScenarioResultStructure(ScenarioResult scenario)
@@ -171,7 +187,31 @@ namespace SWAT_SQLite_Result.ArcSWAT
                         cols.Add(item.getColumnValue_String("name"));                    
                 }
                 if (cols.Count > 0)
+                {                  
+                    //add TN and TP option for subbasin 
+                    //they will be calculated in the interface
+                    //all the N/P columns should exist to calculte TN/TP
+                    if (tableName.Equals(TABLE_NAME_SUB))
+                    {
+                        int i = 0;
+                        for(;i<SUBBAIN_NITROGEN_COLUMNS.Length;i++)
+                        {
+                            if (!cols.Contains(SUBBAIN_NITROGEN_COLUMNS[i])) break;
+                        }
+                        if(i == SUBBAIN_NITROGEN_COLUMNS.Length)
+                            cols.Add(SUBBAIN_TOTAL_NITROGEN_COLUMN);
+
+                        i = 0;
+                        for (; i < SUBBAIN_PHOSPHORUS_COLUMNS.Length; i++)
+                        {
+                            if (!cols.Contains(SUBBAIN_PHOSPHORUS_COLUMNS[i])) break;
+                        }
+                        if (i == SUBBAIN_PHOSPHORUS_COLUMNS.Length)
+                            cols.Add(SUBBAIN_TOTAL_PHOSPHORUS_COLUMN);
+                    }
+
                     _columns.Add(tableName, cols);
+                }
                 else
                     return new StringCollection();
             }
@@ -259,6 +299,7 @@ namespace SWAT_SQLite_Result.ArcSWAT
             foreach(string tbl in tbls_fromType)
                 if(isTableHasData(tbl))
                     tbls.Add(tbl);
+
             return tbls;
         }
     }

@@ -21,9 +21,68 @@ namespace SWAT_SQLite_Result.ArcSWAT
         protected DataTable _table = null;
         protected Statistics _stat = null;
         protected string _colCompare = null;
+        protected string _col_display = null;
+        protected string _unit = null;
 
         public string ColumnCompare { get { return _colCompare; } }
         public string Column { get { return _col; } }
+
+        public bool IsFlow
+        {
+            get
+            {
+                return ColumnDisplay.Equals("Flow");
+            }
+        }
+
+        public string Unit
+        {
+            get
+            {
+                if (_unit == null)
+                {
+                    string col = ColumnDisplay;
+                }
+                return _unit;
+            }
+        }
+        public string ColumnDisplay 
+        { 
+            get 
+            {
+                if (_col_display == null)
+                {
+                    string col = _col.ToUpper();
+                    if (col.Contains("SED"))
+                    {
+                        _unit = "tons";
+                        _col_display = "Sediment";
+                    }
+                    else if(col.Contains("TOT_N"))
+                    {
+                        _unit = "kg";
+                        _col_display = "TN";
+                    }
+                    else if (col.Contains("TOT_P"))
+                    {
+                        _unit = "kg";
+                        _col_display = "TP";
+                    }
+                    else if (col.Contains("FLOW"))
+                    {
+                        _unit = "m3/s";
+                        _col_display = "Flow";
+                    }
+                    else
+                    {
+                        _unit = "";
+                        _col_display = "";
+                    }
+                }
+                return _col_display;
+            } 
+        }
+
         public string ID { get { return _id; } }
         public override int Year { get { return _year; } }
         public Statistics Statistics { get { if (_stat == null) _stat = new Statistics(Table, _col); return _stat; } }

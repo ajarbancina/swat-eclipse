@@ -43,6 +43,10 @@
     <Reference Include="DotSpatial.Data">
       <HintPath>..\DotSpatial.Core.1.6\DotSpatial.Data.dll</HintPath>
     </Reference>
+    <Reference Include="DotSpatial.Data.Forms, Version=1.6.0.0, Culture=neutral, PublicKeyToken=53ab5a198378d4c1, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\DotSpatial.Core.1.6\DotSpatial.Data.Forms.dll</HintPath>
+    </Reference>
     <Reference Include="DotSpatial.Symbology">
       <HintPath>..\DotSpatial.Core.1.6\DotSpatial.Symbology.dll</HintPath>
     </Reference>
@@ -53,6 +57,7 @@
       <HintPath>..\LumenWorks.Framework.IO.CSV.CsvReader\LumenWorks.Framework.IO.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data.SQLite, Version=1.0.66.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
@@ -74,6 +79,7 @@
     <Compile Include="ArcSWAT\FolderBase.cs" />
     <Compile Include="ArcSWAT\HRU.cs" />
     <Compile Include="ArcSWAT\ObservationData.cs" />
+    <Compile Include="ArcSWAT\ResultSummaryType.cs" />
     <Compile Include="ArcSWAT\SeasonType.cs" />
     <Compile Include="ArcSWAT\StatisticsType.cs" />
     <Compile Include="ArcSWAT\SWATUnitColumnYearObservationData.cs" />
@@ -98,6 +104,7 @@
     <Compile Include="ArcSWAT\SWATUnitResult.cs" />
     <Compile Include="ArcSWAT\SWATUnitType.cs" />
     <Compile Include="ArcSWAT\Watershed.cs" />
+    <Compile Include="ArcSWAT\WaterYield.cs" />
     <Compile Include="AverageAnnualView.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -110,6 +117,18 @@
     <Compile Include="CompareCtrl.Designer.cs">
       <DependentUpon>CompareCtrl.cs</DependentUpon>
     </Compile>
+    <Compile Include="DashBoardCtrl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="DashBoardCtrl.Designer.cs">
+      <DependentUpon>DashBoardCtrl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Form3.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form3.Designer.cs">
+      <DependentUpon>Form3.cs</DependentUpon>
+    </Compile>
     <Compile Include="IDList.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -121,6 +140,9 @@
     </Compile>
     <Compile Include="IntervalCtrl.Designer.cs">
       <DependentUpon>IntervalCtrl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="OutputDisplayChart_Scatter.cs">
+      <SubType>Component</SubType>
     </Compile>
     <Compile Include="PerformanceView.cs">
       <SubType>UserControl</SubType>
@@ -159,6 +181,12 @@
       <DependentUpon>SeasonCtrl.cs</DependentUpon>
     </Compile>
     <Compile Include="ArcSWAT\SeasonData.cs" />
+    <Compile Include="SummaryTypeCtrl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="SummaryTypeCtrl.Designer.cs">
+      <DependentUpon>SummaryTypeCtrl.cs</DependentUpon>
+    </Compile>
     <Compile Include="SWATFileList.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -166,6 +194,9 @@
       <DependentUpon>SWATFileList.cs</DependentUpon>
     </Compile>
     <Compile Include="SWAT_SQLite.cs" />
+    <Compile Include="WaterYieldPieChart.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="WatershedView.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -245,6 +276,12 @@
     <EmbeddedResource Include="CompareCtrl.resx">
       <DependentUpon>CompareCtrl.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="DashBoardCtrl.resx">
+      <DependentUpon>DashBoardCtrl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form3.resx">
+      <DependentUpon>Form3.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="IDList.resx">
       <DependentUpon>IDList.cs</DependentUpon>
     </EmbeddedResource>
@@ -268,6 +305,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="SeasonCtrl.resx">
       <DependentUpon>SeasonCtrl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SummaryTypeCtrl.resx">
+      <DependentUpon>SummaryTypeCtrl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="SWATFileList.resx">
       <DependentUpon>SWATFileList.cs</DependentUpon>
