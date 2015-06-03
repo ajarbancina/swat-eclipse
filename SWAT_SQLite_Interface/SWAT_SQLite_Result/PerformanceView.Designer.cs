@@ -31,6 +31,9 @@
             System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
             System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
             System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend2 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
@@ -43,8 +46,10 @@
             this.label1 = new System.Windows.Forms.Label();
             this.cmbSplitYear = new System.Windows.Forms.ComboBox();
             this.cmbStatisticTypes = new System.Windows.Forms.ComboBox();
+            this.splitContainer3 = new System.Windows.Forms.SplitContainer();
             this.seasonCtrl1 = new SWAT_SQLite_Result.SeasonCtrl();
             this.compareCtrl1 = new SWAT_SQLite_Result.CompareCtrl();
+            this.outputDisplayChart_Scatter1 = new SWAT_SQLite_Result.OutputDisplayChart_Scatter();
             this.outputDisplayChart1 = new SWAT_SQLite_Result.OutputDisplayChart();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -60,6 +65,11 @@
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).BeginInit();
             this.tabPage2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView3)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer3)).BeginInit();
+            this.splitContainer3.Panel1.SuspendLayout();
+            this.splitContainer3.Panel2.SuspendLayout();
+            this.splitContainer3.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.outputDisplayChart_Scatter1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.outputDisplayChart1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -89,7 +99,7 @@
             // 
             // splitContainer1.Panel2
             // 
-            this.splitContainer1.Panel2.Controls.Add(this.outputDisplayChart1);
+            this.splitContainer1.Panel2.Controls.Add(this.splitContainer3);
             this.splitContainer1.Size = new System.Drawing.Size(1205, 702);
             this.splitContainer1.SplitterDistance = 456;
             this.splitContainer1.TabIndex = 1;
@@ -209,6 +219,24 @@
             this.cmbStatisticTypes.Size = new System.Drawing.Size(90, 21);
             this.cmbStatisticTypes.TabIndex = 4;
             // 
+            // splitContainer3
+            // 
+            this.splitContainer3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.splitContainer3.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer3.Location = new System.Drawing.Point(0, 0);
+            this.splitContainer3.Name = "splitContainer3";
+            // 
+            // splitContainer3.Panel1
+            // 
+            this.splitContainer3.Panel1.Controls.Add(this.outputDisplayChart_Scatter1);
+            // 
+            // splitContainer3.Panel2
+            // 
+            this.splitContainer3.Panel2.Controls.Add(this.outputDisplayChart1);
+            this.splitContainer3.Size = new System.Drawing.Size(1205, 242);
+            this.splitContainer3.SplitterDistance = 401;
+            this.splitContainer3.TabIndex = 1;
+            // 
             // seasonCtrl1
             // 
             this.seasonCtrl1.Location = new System.Drawing.Point(141, 6);
@@ -223,21 +251,38 @@
             this.compareCtrl1.Size = new System.Drawing.Size(129, 65);
             this.compareCtrl1.TabIndex = 0;
             // 
-            // outputDisplayChart1
+            // outputDisplayChart_Scatter1
             // 
             chartArea1.Name = "ChartArea1";
-            this.outputDisplayChart1.ChartAreas.Add(chartArea1);
-            this.outputDisplayChart1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.outputDisplayChart_Scatter1.ChartAreas.Add(chartArea1);
+            this.outputDisplayChart_Scatter1.Dock = System.Windows.Forms.DockStyle.Fill;
             legend1.Name = "Legend1";
-            this.outputDisplayChart1.Legends.Add(legend1);
-            this.outputDisplayChart1.Location = new System.Drawing.Point(0, 0);
-            this.outputDisplayChart1.Name = "outputDisplayChart1";
-            this.outputDisplayChart1.Season = SWAT_SQLite_Result.ArcSWAT.SeasonType.WholeYear;
+            this.outputDisplayChart_Scatter1.Legends.Add(legend1);
+            this.outputDisplayChart_Scatter1.Location = new System.Drawing.Point(0, 0);
+            this.outputDisplayChart_Scatter1.Name = "outputDisplayChart_Scatter1";
             series1.ChartArea = "ChartArea1";
             series1.Legend = "Legend1";
             series1.Name = "Series1";
-            this.outputDisplayChart1.Series.Add(series1);
-            this.outputDisplayChart1.Size = new System.Drawing.Size(1205, 242);
+            this.outputDisplayChart_Scatter1.Series.Add(series1);
+            this.outputDisplayChart_Scatter1.Size = new System.Drawing.Size(399, 240);
+            this.outputDisplayChart_Scatter1.TabIndex = 0;
+            this.outputDisplayChart_Scatter1.Text = "outputDisplayChart_Scatter1";
+            // 
+            // outputDisplayChart1
+            // 
+            chartArea2.Name = "ChartArea1";
+            this.outputDisplayChart1.ChartAreas.Add(chartArea2);
+            this.outputDisplayChart1.Dock = System.Windows.Forms.DockStyle.Fill;
+            legend2.Name = "Legend1";
+            this.outputDisplayChart1.Legends.Add(legend2);
+            this.outputDisplayChart1.Location = new System.Drawing.Point(0, 0);
+            this.outputDisplayChart1.Name = "outputDisplayChart1";
+            this.outputDisplayChart1.Season = SWAT_SQLite_Result.ArcSWAT.SeasonType.WholeYear;
+            series2.ChartArea = "ChartArea1";
+            series2.Legend = "Legend1";
+            series2.Name = "Series1";
+            this.outputDisplayChart1.Series.Add(series2);
+            this.outputDisplayChart1.Size = new System.Drawing.Size(798, 240);
             this.outputDisplayChart1.TabIndex = 0;
             this.outputDisplayChart1.Text = "outputDisplayChart1";
             // 
@@ -263,6 +308,11 @@
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).EndInit();
             this.tabPage2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView3)).EndInit();
+            this.splitContainer3.Panel1.ResumeLayout(false);
+            this.splitContainer3.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer3)).EndInit();
+            this.splitContainer3.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.outputDisplayChart_Scatter1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.outputDisplayChart1)).EndInit();
             this.ResumeLayout(false);
 
@@ -285,5 +335,7 @@
         private CompareCtrl compareCtrl1;
         private SeasonCtrl seasonCtrl1;
         private System.Windows.Forms.ComboBox cmbStatisticTypes;
+        private System.Windows.Forms.SplitContainer splitContainer3;
+        private OutputDisplayChart_Scatter outputDisplayChart_Scatter1;
     }
 }
