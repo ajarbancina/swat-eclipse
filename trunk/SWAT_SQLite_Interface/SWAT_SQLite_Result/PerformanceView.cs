@@ -73,7 +73,10 @@ namespace SWAT_SQLite_Result
         {
             InitializeComponent();
 
-            this.Resize += (s, e) => { this.splitContainer1.SplitterDistance = this.Height - 250; }; //always set the height of chart as 250
+            this.Resize += (s, e) => 
+            { 
+                this.splitContainer1.SplitterDistance = this.Height - 250; 
+            }; //always set the height of chart as 250
 
             cmbSplitYear.SelectedIndexChanged += (s, e) => {
                 updatePerformanceTable();
@@ -107,6 +110,10 @@ namespace SWAT_SQLite_Result
                     //get statistic info for each hydrological year
                     _statisticTable = _currentResult.UnitResult.getYearlyPerformanceTable(_col,_statisticType);
                     this.dataGridView2.DataSource = _statisticTable;
+
+                    //----
+                    //show scatter plot
+                    this.outputDisplayChart_Scatter1.draw(_currentResult, ArcSWAT.SeasonType.WholeYear);
                 }
                 catch { }
 
