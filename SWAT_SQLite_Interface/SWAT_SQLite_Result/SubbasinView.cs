@@ -182,12 +182,21 @@ namespace SWAT_SQLite_Result
             //the id selection changed
             tblMapData.RowHeadersVisible = false;
             tblMapData.ReadOnly = true;
+            tblMapData.Sorted += (s, e) =>
+            {
+                //System.Diagnostics.Debug.WriteLine("--------");
+                //foreach (DataGridViewRow r in tblMapData.Rows)
+                //{
+                //    if (r.Cells[0].Value == null) continue;
+                //    System.Diagnostics.Debug.WriteLine(r.Cells[0].Value);
+                //}
+            };
             tblMapData.RowEnter += (s, e) =>
                 {
                     if (e.RowIndex < 0 || tblMapData.Rows[e.RowIndex].Cells[0].Value == null) return;
                     int id = int.Parse(tblMapData.Rows[e.RowIndex].Cells[0].Value.ToString());
-                    
-                    onIDChanged(id); 
+
+                    onIDChanged(id);
                     idList1.ID = id;
                     subbasinMap1.ID = id;
                 };
@@ -198,20 +207,9 @@ namespace SWAT_SQLite_Result
             subbasinMap1.onMapUpdated += (s, e) => 
             {
                 this.tblMapData.DataSource = subbasinMap1.DataTable;
-                foreach (DataGridViewColumn col in tblMapData.Columns)
-                {
-                     col.Visible = col.Name.Equals(SubbasinMap.ID_COLUMN_NAME) ||
-                        col.Name.Equals(SubbasinMap.RESULT_COLUMN);
-                     if (col.Name.Equals(SubbasinMap.RESULT_COLUMN))
-                     {
-                         col.DefaultCellStyle.Format = "F4";
-                         col.HeaderText = _col;
-                     }
-                     else if (col.Name.Equals(SubbasinMap.ID_COLUMN_NAME))
-                     {
-                         col.HeaderText = _resultType.ToString().ToLower();
-                     }
-                }
+                tblMapData.Columns[SubbasinMap.ID_COLUMN_NAME].HeaderText = _resultType.ToString().ToLower();
+                tblMapData.Columns[SubbasinMap.RESULT_COLUMN].HeaderText = _col;
+                tblMapData.Columns[SubbasinMap.RESULT_COLUMN].DefaultCellStyle.Format = "F4"; 
             };
 
             //chart export

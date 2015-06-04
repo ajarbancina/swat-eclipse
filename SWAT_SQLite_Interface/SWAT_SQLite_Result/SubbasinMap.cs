@@ -495,7 +495,8 @@ namespace SWAT_SQLite_Result
         {
             get
             {
-                return _workingLayer.DataSet.DataTable;
+                DataView view = new DataView(_workingLayer.DataSet.DataTable);
+                return view.ToTable(false,ID_COLUMN_NAME, RESULT_COLUMN);
             }
         }
 
