@@ -145,6 +145,8 @@
             call sqlite3_create_index(db,sq_indexname(i),
      &                                  sq_tablename(i),sq_indexs(i))
         end do
+        call sqlite3_do( db, "ANALYZE") !!update talbe and indexes statistis for better query performance
+        call sqlite3_do( db, "VACUUM")  !!collect all unnecessary space
         call outprocess("sqlite close")
         call sqlite3_close( db)
         call outprocess("sqlite done")
