@@ -65,10 +65,6 @@
       if(iprint == 2) rfilename = "result_canswat_yearly.db3";
       write(*,*) rfilename
 
-      !!delete existing result_622.db3
-      open(1234,file=rfilename,status="old",iostat=stat)
-      if(stat .eq. 0) close(1234,status="delete")
-
       !!create the result database
       call sqlite3_open( rfilename, db )
 
