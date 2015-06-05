@@ -159,7 +159,7 @@
       if (rhsim == 1) call hmeas
 
 !! Wind Speed: Measured !!
-      if (wndsim == 1 .and. ipet == 1) call wmeas
+      if (wndsim == 1) call wmeas
 !Liu<
 !! Added by Hailiang April 11 2011 ~~ start ~~
       !!if (wndsim == 3 .and. ipet == 1) call wmeas2
