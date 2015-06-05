@@ -53,7 +53,7 @@
 
       use parm
       integer :: stat
-      character(len=22) :: rfilename;
+      character(len=22) :: rfilename
 
       datecol_num = 1                    !!yearly
       if(iprint == 1) datecol_num = 3    !!daily
@@ -64,10 +64,6 @@
       if(iprint == 0) rfilename = "result_627_monthly.db3";
       if(iprint == 2) rfilename = "result_627_yearly.db3";
       write(*,*) rfilename
-
-      !!delete existing result_622.db3
-      open(1234,file=rfilename,status="old",iostat=stat)
-      if(stat .eq. 0) close(1234,status="delete")
 
       !!create the result database
       call sqlite3_open( rfilename, db )
