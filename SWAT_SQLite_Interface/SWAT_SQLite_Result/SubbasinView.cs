@@ -191,22 +191,25 @@ namespace SWAT_SQLite_Result
                 //    System.Diagnostics.Debug.WriteLine(r.Cells[0].Value);
                 //}
             };
-            tblMapData.RowEnter += (s, e) =>
-                {
-                    if (e.RowIndex < 0 || tblMapData.Rows[e.RowIndex].Cells[0].Value == null) return;
-                    int id = int.Parse(tblMapData.Rows[e.RowIndex].Cells[0].Value.ToString());
-
-                    onIDChanged(id);
-                    idList1.ID = id;
-                    subbasinMap1.ID = id;
-                };
+            tblMapData.RowEnter += onMapTableIDChanged;
 
             //map            
             subbasinMap1.onLayerSelectionChanged += (unitType, id) => { onIDChanged(id); idList1.ID = id; setMapTalbeIDSelection(id); };
             subbasinMap1.setProjectScenario(project, scenario, type);
             subbasinMap1.onMapUpdated += (s, e) => 
             {
-                this.tblMapData.DataSource = subbasinMap1.DataTable;
+                //get current selected id on map
+                //if none is selected, will be -1
+                //will keep the current the selection when the datasource of map data table view is changed
+                int id = subbasinMap1.ID;
+                if (id > 0) this.tblMapData.RowEnter -= onMapTableIDChanged;    //remove the handler, don't need to do this when none is selected                   
+                this.tblMapData.DataSource = subbasinMap1.DataTable;            //set data
+                if (id > 0)
+                {
+                    setMapTalbeIDSelection(id);                                 //use current selected id, don't change to a new one
+                    this.tblMapData.RowEnter += onMapTableIDChanged;            //resume the handler
+                }
+
                 tblMapData.Columns[SubbasinMap.ID_COLUMN_NAME].HeaderText = _resultType.ToString().ToLower();
                 tblMapData.Columns[SubbasinMap.RESULT_COLUMN].HeaderText = _col;
                 tblMapData.Columns[SubbasinMap.RESULT_COLUMN].DefaultCellStyle.Format = "F4"; 
@@ -261,6 +264,21 @@ namespace SWAT_SQLite_Result
                 int currentId = int.Parse(r.Cells[0].Value.ToString());
                 r.Selected = currentId == id;
             }          
+        }
+
+        /// <summary>
+        /// Handle the event when a new id is selected in the map data table view
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void onMapTableIDChanged(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex < 0 || tblMapData.Rows[e.RowIndex].Cells[0].Value == null) return;
+            int id = int.Parse(tblMapData.Rows[e.RowIndex].Cells[0].Value.ToString());
+
+            onIDChanged(id);
+            idList1.ID = id;
+            subbasinMap1.ID = id;
         }
 
         public void onIDChanged(int id)
