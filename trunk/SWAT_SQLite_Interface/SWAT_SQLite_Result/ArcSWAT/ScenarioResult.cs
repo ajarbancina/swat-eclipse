@@ -350,6 +350,12 @@ namespace SWAT_SQLite_Result.ArcSWAT
                         sql = string.Format("select {0},{1},{2} as {3} from [{4}]",
                                 ScenarioResultStructure.COLUMN_NAME_YEAR, type, ScenarioResultStructure.SUBBAIN_PHOSPHORUS_COLUMNS_SQL, col, type);
                 }
+
+                //years
+                if (year != -1)
+                    sql += string.Format(" where {0} = {1}",
+                        ScenarioResultStructure.COLUMN_NAME_YEAR, year);
+
                 DataTable dt = GetDataTable(sql);
 
                 //summary the result by year and id
@@ -368,18 +374,18 @@ namespace SWAT_SQLite_Result.ArcSWAT
 
 
                 Dictionary<int, double> results = new Dictionary<int, double>();
+                
                 //calculate the average annual
-                if (year == -1)
+                int numofyear = 1;
+                if (year == -1) numofyear = EndYear - StartYear;                    
+                foreach (var oneyearid in query)
                 {
-                    int numofyear = EndYear - StartYear;                    
-                    foreach (var oneyearid in query)
-                    {
-                        //Debug.WriteLine(String.Format("{0}:{1}", oneyearid.ID, oneyearid.Year));
-                        if (!results.ContainsKey(oneyearid.ID))
-                            results.Add(oneyearid.ID, 0.0);
-                        results[oneyearid.ID] += oneyearid.Total / numofyear; //get the average
-                    }                    
-                }
+                    //Debug.WriteLine(String.Format("{0}:{1}", oneyearid.ID, oneyearid.Year));
+                    if (!results.ContainsKey(oneyearid.ID))
+                        results.Add(oneyearid.ID, 0.0);
+                    results[oneyearid.ID] += oneyearid.Total / numofyear; //get the average
+                }     
+               
                 _avgAnnualResults.Add(result_id, results);
             }
 
