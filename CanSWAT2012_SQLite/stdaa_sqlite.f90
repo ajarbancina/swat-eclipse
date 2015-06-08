@@ -428,7 +428,7 @@
       tblname = 'ave_monthly_basin'
       colnum = size(hedamo)
       allocate(colamo(1+colnum))
-      call sqlite3_column_props( colahu(1), "MO", SQLITE_INT)
+      call sqlite3_column_props( colamo(1), "MO", SQLITE_INT)
       do j = 1, colnum
         call sqlite3_column_props( colamo(1+j), hedamo(j), SQLITE_REAL)
       end do
