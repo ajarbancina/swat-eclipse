@@ -443,9 +443,14 @@ namespace SWAT_SQLite_Result
             DataTable dt = _workingLayer.DataSet.DataTable;
             int resultIndex = dt.Columns.IndexOf(RESULT_COLUMN);
             int idIndex = dt.Columns.IndexOf(ID_COLUMN_NAME);
-            if (summaryType == ArcSWAT.ResultSummaryType.AVERAGE_ANNUAL)
+            if (summaryType == ArcSWAT.ResultSummaryType.AVERAGE_ANNUAL ||
+                summaryType == ArcSWAT.ResultSummaryType.ANNUAL)
             {
-                Dictionary<int, double> ave_annual = _scenario.getAverageAnnualResults(_type, col, -1);
+                int year = -1;
+                if (summaryType == ArcSWAT.ResultSummaryType.ANNUAL)
+                    year = date.Year;
+
+                Dictionary<int, double> ave_annual = _scenario.getAverageAnnualResults(_type, col, year);
                 foreach (DataRow r in dt.Rows)
                 {
                     r[resultIndex] = ArcSWAT.ScenarioResultStructure.EMPTY_VALUE;
