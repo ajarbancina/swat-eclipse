@@ -31,12 +31,10 @@
             this.components = new System.ComponentModel.Container();
             this.rdbEachYear = new System.Windows.Forms.RadioButton();
             this.rdbAllYears = new System.Windows.Forms.RadioButton();
-            this.tbYear = new System.Windows.Forms.TrackBar();
-            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.bPlay = new System.Windows.Forms.Button();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
-            ((System.ComponentModel.ISupportInitialize)(this.tbYear)).BeginInit();
+            this.cmbYear = new System.Windows.Forms.ComboBox();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -60,19 +58,11 @@
             this.rdbAllYears.Text = "All Years";
             this.rdbAllYears.UseVisualStyleBackColor = true;
             // 
-            // tbYear
-            // 
-            this.tbYear.LargeChange = 1;
-            this.tbYear.Location = new System.Drawing.Point(77, 17);
-            this.tbYear.Name = "tbYear";
-            this.tbYear.Size = new System.Drawing.Size(93, 45);
-            this.tbYear.TabIndex = 1;
-            // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.cmbYear);
             this.groupBox1.Controls.Add(this.bPlay);
             this.groupBox1.Controls.Add(this.rdbEachYear);
-            this.groupBox1.Controls.Add(this.tbYear);
             this.groupBox1.Controls.Add(this.rdbAllYears);
             this.groupBox1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox1.Location = new System.Drawing.Point(0, 0);
@@ -95,6 +85,14 @@
             // 
             this.timer1.Interval = 2000;
             // 
+            // cmbYear
+            // 
+            this.cmbYear.FormattingEnabled = true;
+            this.cmbYear.Location = new System.Drawing.Point(88, 17);
+            this.cmbYear.Name = "cmbYear";
+            this.cmbYear.Size = new System.Drawing.Size(72, 21);
+            this.cmbYear.TabIndex = 3;
+            // 
             // YearCtrl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -102,7 +100,6 @@
             this.Controls.Add(this.groupBox1);
             this.Name = "YearCtrl";
             this.Size = new System.Drawing.Size(207, 65);
-            ((System.ComponentModel.ISupportInitialize)(this.tbYear)).EndInit();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.ResumeLayout(false);
@@ -113,10 +110,9 @@
 
         private System.Windows.Forms.RadioButton rdbEachYear;
         private System.Windows.Forms.RadioButton rdbAllYears;
-        private System.Windows.Forms.TrackBar tbYear;
-        private System.Windows.Forms.ToolTip toolTip1;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.Button bPlay;
         private System.Windows.Forms.Timer timer1;
+        private System.Windows.Forms.ComboBox cmbYear;
     }
 }

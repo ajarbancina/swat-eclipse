@@ -17,25 +17,23 @@ namespace SWAT_SQLite_Result
         {
             InitializeComponent();
 
-            tbYear.Scroll +=
-            (ss, _e) =>
+            cmbYear.SelectedIndexChanged += (s, e) =>
             {
-                toolTip1.SetToolTip(tbYear, tbYear.Value.ToString());
-
                 if (onYearChanged != null) onYearChanged(this, new EventArgs());
             };
 
-            rdbEachYear.CheckedChanged += (ss, e) => { tbYear.Enabled = DisplayByYear; bPlay.Enabled = tbYear.Enabled; if (onYearChanged != null) onYearChanged(this, new EventArgs()); };
-            rdbAllYears.CheckedChanged += (ss, e) => { tbYear.Enabled = DisplayByYear; bPlay.Enabled = tbYear.Enabled; if (onYearChanged != null) onYearChanged(this, new EventArgs()); };
+            rdbEachYear.Checked = true;
+            rdbEachYear.CheckedChanged += (ss, e) => { onDisplayTypeChanged(); };
+            rdbAllYears.CheckedChanged += (ss, e) => { onDisplayTypeChanged(); };
 
             timer1.Tick += (ss, e) =>
             {
-                if (tbYear.Value < tbYear.Maximum)
+                if (cmbYear.SelectedIndex < cmbYear.Items.Count - 1)
                 {
-                    tbYear.Value += 1;
+                    cmbYear.SelectedIndex += 1;
                     if (onYearChanged != null) onYearChanged(this, new EventArgs());
 
-                    if (tbYear.Value == tbYear.Maximum)
+                    if (cmbYear.SelectedIndex == cmbYear.Items.Count - 1)
                     {
                         bPlay.Text = "Start";
                         timer1.Stop();
@@ -47,9 +45,9 @@ namespace SWAT_SQLite_Result
                 {
                     if (bPlay.Text.ToLower().Equals("start"))
                     {
-                        if (tbYear.Value == tbYear.Maximum)
+                        if (cmbYear.SelectedIndex == cmbYear.Items.Count - 1)
                         {
-                            tbYear.Value = tbYear.Minimum;
+                            cmbYear.SelectedIndex = 0;
                             if (onYearChanged != null) onYearChanged(this, new EventArgs());
                         }
 
@@ -65,16 +63,38 @@ namespace SWAT_SQLite_Result
                 };
         }
 
+        private void onDisplayTypeChanged()
+        {
+            if (cmbYear.Enabled == DisplayByYear) return;
+            cmbYear.Enabled = DisplayByYear; 
+            bPlay.Enabled = cmbYear.Enabled; 
+            if (onYearChanged != null) 
+                onYearChanged(this, new EventArgs());
+        }
+
+        /// <summary>
+        /// The scenario result
+        /// </summary>
         public ArcSWAT.ScenarioResult Scenario
         {
             set
             {
-                tbYear.Minimum = value.StartYear;
-                tbYear.Maximum = value.EndYear;
-                tbYear.Value = value.StartYear;
-
+                initializeYearList(value.StartYear, value.EndYear);
                 rdbEachYear.Checked = true;
             }
+        }
+
+        /// <summary>
+        /// Add all years to the list
+        /// </summary>
+        /// <param name="startYear"></param>
+        /// <param name="endYear"></param>
+        private void initializeYearList(int startYear, int endYear)
+        {
+            this.cmbYear.Items.Clear();
+            for (int i = startYear; i <= endYear; i++)
+                this.cmbYear.Items.Add(i);
+            this.cmbYear.SelectedIndex = 0;
         }
 
         private ArcSWAT.SWATUnitColumnYearObservationData _observedData = null;
@@ -98,14 +118,33 @@ namespace SWAT_SQLite_Result
                     _observedData.LastDay.Year == value.LastDay.Year) return; //same end year
                 
                 _observedData = value;
-                tbYear.Minimum = value.FirstDay.Year;
-                tbYear.Maximum = value.LastDay.Year;
-                tbYear.Value = value.FirstDay.Year;
+                initializeYearList(value.FirstDay.Year, value.LastDay.Year);
                 rdbAllYears.Checked = true;              
             }
         }
 
-        public bool DisplayByYear { get { return rdbEachYear.Checked; } }
-        public int Year { get { if (DisplayByYear) return tbYear.Value; return -1; } }
+        /// <summary>
+        /// If year by year option is used
+        /// </summary>
+        public bool DisplayByYear 
+        { 
+            get 
+            { 
+                return rdbEachYear.Checked; 
+            } 
+        }
+        
+        /// <summary>
+        /// Selected year
+        /// </summary>
+        public int Year 
+        { 
+            get 
+            {
+                if (DisplayByYear)
+                    return int.Parse(cmbYear.SelectedItem.ToString()); 
+                return -1; 
+            } 
+        }
     }
 }
