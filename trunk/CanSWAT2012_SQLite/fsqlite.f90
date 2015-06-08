@@ -551,7 +551,7 @@ subroutine sqlite3_create_table( db, tablename, columns, primary )
    endif
 
    ncols = size(columns)
-   write( command, * ) 'create table ', tablename, ' (', &
+   write( command, * ) 'create table ', trim(tablename), ' (', &
       ( trim(columns(i)%name), ' ', trim(typename(columns(i), primary_)), ', ', &
            i = 1,ncols-1 ), &
       trim(columns(ncols)%name), ' ', trim(typename(columns(ncols),primary_)), ')'
@@ -575,7 +575,7 @@ subroutine sqlite3_create_index( db, indexname, tablename, columns )
 
    character(len=40+len(tablename)+len(indexname)+len(columns)) :: command
 
-   write( command, * ) "CREATE INDEX IF NOT EXISTS ", indexname , " ON ", tablename, "(", columns , ")"
+   write( command, * ) "CREATE INDEX IF NOT EXISTS ", trim(indexname) , " ON ", trim(tablename), " (", trim(columns) , ")"
    call sqlite3_do( db, command )
 
 end subroutine sqlite3_create_index
