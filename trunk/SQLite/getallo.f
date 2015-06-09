@@ -129,7 +129,7 @@
 
       !!get and output current working directory to be valdated
       call getcwd(workingdir)
-      write(*,*) workingdir
+      write(*,*) trim(workingdir)
 
       call outprocess("getallo")
 
