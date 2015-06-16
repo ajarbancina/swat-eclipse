@@ -158,6 +158,6 @@
                 call sqlite3_set_column( colmgt(21), fertorgp )
         end select
 
-        call sqlite3_insert( db, tblmgt, colmgt )
+        call sqlite3_insert_stmt( db, stmtmgt, colmgt )
 
       end

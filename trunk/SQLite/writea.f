@@ -360,7 +360,7 @@
                 do k=6,16
                     call sqlite3_set_column( colrsv(27+k), resouty(k,j))
                 end do
-                call sqlite3_insert( db, tblrsv, colrsv )
+                call sqlite3_insert_stmt( db, stmtrsv, colrsv )
                     !!~~~ SQLite ~~~
                 else
               write (8,5800) j, iyr, res_vol(j), resouty(1,j),          

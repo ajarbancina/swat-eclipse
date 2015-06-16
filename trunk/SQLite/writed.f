@@ -120,7 +120,7 @@
                       call sqlite3_set_column(colswr(4+j1),sol_st(j1,j))
                     end if
                 end do
-                call sqlite3_insert( db, tblswr, colswr )
+                call sqlite3_insert_stmt( db, stmtswr, colswr )
             else
           write (129,5000) iida, j, (sol_st(j1,j), j1 = 1, sol_nly(j))
 !          write (129,5000) iida, subnum(j), hruno(j),                   

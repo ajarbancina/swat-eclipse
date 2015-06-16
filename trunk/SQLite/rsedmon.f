@@ -40,7 +40,7 @@
             do ii = 42,58
                 call sqlite3_set_column( colsed(ii-36), rchmono(ii,j) )
             end do
-            call sqlite3_insert( db, tblsed, colsed )
+            call sqlite3_insert_stmt( db, stmtsed, colsed )
           else
             write (84,5000) j, subgis(j), mo_chk, rch_dakm(j),
      &       rchmono(3,j), rchmono(4,j),(rchmono(ii,j),ii=42,58)

@@ -137,7 +137,7 @@
         
 	  end if
 
-      call sqlite3_insert( db, tblsub, colsub )
+      call sqlite3_insert_stmt( db, stmtsub, colsub )
 
       return
 !     changed for jennifer b.

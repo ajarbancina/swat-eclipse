@@ -10,8 +10,6 @@
 
       tblsed = 'sed'
 
-      call sqlite3_delete_table( db, tblsed)
-
       sedbasiccolnum = 1 + datecol_num
       sedvaluecolnum = size(hedsed)
 
@@ -27,4 +25,5 @@
       end do
       call sqlite3_create_table( db, tblsed, colsed )
       call headout_sqlite_createindex("sed_index",tblsed,"RCH",1)
+      call sqlite3_insert_sql_statement(db,tblsed, colsed, stmtsed)
       end

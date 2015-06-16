@@ -13,9 +13,6 @@
       !!only create this table when reservoirs exist
       if(nres > 0) then
 
-      !!delete any existing table
-      call sqlite3_delete_table( db, tblrsv)
-
       rsvvaluecolnum = 41
       rsvbasiccolnum = 1 + datecol_num
       allocate( colrsv(rsvbasiccolnum + rsvvaluecolnum) )
@@ -30,6 +27,6 @@
       end do
       call sqlite3_create_table( db, tblrsv, colrsv )
       call headout_sqlite_createindex("rsv_index",tblrsv,"RES",1)
-
+      call sqlite3_insert_sql_statement(db,tblrsv, colrsv, stmtrsv)
       end if
       end

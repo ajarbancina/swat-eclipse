@@ -65,14 +65,28 @@
       if(iprint == 2) rfilename = "result_627_yearly.db3";
       write(*,*) rfilename
 
+      !!try to delete first
+      open(19820428,file=rfilename,status='old',iostat=stat)
+      if(stat .eq. 0) close(19820428,status = 'delete')
+      
       !!create the result database
       call sqlite3_open( rfilename, db )
-
-      !!clear database
+      call sqlite3_do(db,"pragma synchronous = 0")
+      call sqlite3_do(db,"pragma journal_mode = memory")
+      
+      !!if it's not deleted for some reason, clear the database and clean up
+      call outprocess("start clear")
       call sqlite3_clear(db)
+      call outprocess("end clear")
+      
+      !!vacuum should be executed after clean up rather than after all data is writen.
+      !!it will take lots of time when database is large
+      call outprocess("vacuum")
+      call sqlite3_do( db, "VACUUM")  !!collect all unnecessary space
 
       !!create tables
       call header_sqlite
+      call outprocess("start create tables")
       call headout_sqlite_rch
       call headout_sqlite_hru
       call headout_sqlite_sub
@@ -85,6 +99,7 @@
       call headout_sqlite_snu
       call headout_sqlite_swr
       call headout_sqlite_deg
+      call outprocess("end create tables")
       call sqlite3_begin( db )
       call sqlite_writeinfo
 

@@ -67,7 +67,7 @@
             call sqlite3_set_column( colsnu(8), solorgn_t )
             call sqlite3_set_column( colsnu(9), solorgp_t )
             call sqlite3_set_column( colsnu(10), cnday(j) )
-            call sqlite3_insert( db, tblsnu, colsnu )
+            call sqlite3_insert_stmt( db, stmtsnu, colsnu )
          else
          write (121,1000) i, subnum(j), hruno(j), sol_rsd(1,j), solp_t, 
      &    solno3_t, solorgn_t, solorgp_t, cnday(j)

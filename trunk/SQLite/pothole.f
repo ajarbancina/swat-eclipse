@@ -628,7 +628,7 @@
             call sqlite3_set_column(colpot(1+datecol_num+7),tileo)
             call sqlite3_set_column(colpot(1+datecol_num+8),pot_vol(j))
             call sqlite3_set_column(colpot(1+datecol_num+9),potsa(j))
-            call sqlite3_insert( db, tblpot, colpot )
+            call sqlite3_insert_stmt( db, stmtpot, colpot )
         else
         write (125,2000) subnum(j), hruno(j), i, iyr, potvol_ini,       
      &       potsa_ini, spillo, potsep, potev, sol_sw(j), tileo,        

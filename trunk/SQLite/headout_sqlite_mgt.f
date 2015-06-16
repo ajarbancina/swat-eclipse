@@ -11,8 +11,6 @@
 
       tblmgt = 'mgt'
 
-      call sqlite3_delete_table( db, tblmgt)
-
       if(imgt == 1) then
           valuecolnum = size(hedmgt)
           basiccolnum = 6
@@ -37,6 +35,7 @@
           call sqlite3_create_table( db, tblmgt, colmgt )
           call headout_sqlite_createindex( "mgt_index",tblmgt,
      &                                             "HRU,YR,MO,DA",0)
+          call sqlite3_insert_sql_statement(db,tblmgt, colmgt, stmtmgt)
 
       end if
       end

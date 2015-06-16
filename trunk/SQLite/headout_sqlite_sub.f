@@ -11,9 +11,6 @@
       !table name
       tblsub = 'sub'
 
-      !!delete any existing table
-      call sqlite3_delete_table( db, tblsub)
-
       !!subbasin table
       !!The number of common columns
       tblsub_num = 1 + datecol_num
@@ -44,5 +41,5 @@
       end if
       call sqlite3_create_table( db, tblsub, colsub )
       call headout_sqlite_createindex("sub_index",tblsub,"SUB",1)
-
+      call sqlite3_insert_sql_statement(db,tblsub, colsub, stmtsub)
       end

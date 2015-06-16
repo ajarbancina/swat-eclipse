@@ -489,7 +489,7 @@
 !     &      (pdvas(ii), ii = 1, mhruo), iyr
         end if
       end if
-      call sqlite3_insert( db, tblhru, colhru )
+      call sqlite3_insert_stmt( db, stmthru, colhru )
 
       !!add by zhang
       !!output carbon realted variables

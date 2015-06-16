@@ -351,7 +351,7 @@
      &                                 resoutm(15,j) / Real(idlast) )
                 call sqlite3_set_column( colrsv(44),
      &                                 resoutm(16,j) / Real(idlast) )
-                call sqlite3_insert( db, tblrsv, colrsv )
+                call sqlite3_insert_stmt( db, stmtrsv, colrsv )
                 !!~~~ SQLite ~~~
                     else
                 write (8,5800) j, mo_chk, res_vol(j),                   

@@ -11,8 +11,6 @@
 
       tblswr = 'swr'
 
-      call sqlite3_delete_table( db, tblswr)
-
       if(isto > 0) then
           valuecolnum = size(hedswr)
           basiccolnum = 4
@@ -29,6 +27,7 @@
           call sqlite3_create_table( db, tblswr, colswr )
           call headout_sqlite_createindex( "swr_index",tblswr,
      &                                              "HRU,YR,MO,DA",0)
+          call sqlite3_insert_sql_statement(db,tblswr, colswr, stmtswr)
       end if
 
       end
