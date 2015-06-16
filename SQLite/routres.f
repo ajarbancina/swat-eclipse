@@ -446,7 +446,7 @@
                 call sqlite3_set_column( colrsv(44), lkpst_conc(jres) )
                 call sqlite3_set_column( colrsv(45), lkspst_conc(jres) )
 
-                call sqlite3_insert( db, tblrsv, colrsv )
+                call sqlite3_insert_stmt( db, stmtrsv, colrsv )
                 !!~~~ SQLite ~~~
             else
         write (8,5000) jres, iida, res_vol(jres), resflwi / 86400.,     

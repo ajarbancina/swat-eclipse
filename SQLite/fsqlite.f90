@@ -364,6 +364,28 @@ character(len=80) function sqlite3_errmsg( db )
    sqlite3_errmsg = db%errmsg
 end function sqlite3_errmsg
 
+subroutine sqlite3_open_create( fname, db )
+   character(len=*)      :: fname
+   type(SQLITE_DATABASE) :: db
+
+   character(len=len(fname)+1) :: fnamec
+
+   interface
+      integer function sqlite3_open_create_c( fnamec, handle )
+         character(len=*)      :: fnamec
+         integer, dimension(*) :: handle
+      end function sqlite3_open_create_c
+   end interface
+
+   db%db_handle   = 0
+   db%error       = 0
+   db%errmsg       = ' '
+
+   fnamec = fname
+   call stringtoc( fnamec )
+
+   db%error = sqlite3_open_create_c( fnamec, db%db_handle )
+end subroutine sqlite3_open_create
 
 ! sqlite3_open --
 !    Open a database file
@@ -454,6 +476,10 @@ subroutine sqlite3_do( db, command )
    db%errmsg = ' '
    db%error  = sqlite3_do_c( db%db_handle, commandc, db%errmsg )
 
+   if(sqlite3_error(db)) then
+       write(*,*) command, ":", sqlite3_errmsg(db)
+   end if
+   
 end subroutine sqlite3_do
 
 
@@ -593,33 +619,37 @@ end subroutine sqlite3_delete_index
 
 subroutine sqlite3_clear( db )
    type(SQLITE_DATABASE) :: db
-   type(SQLITE_COLUMN), dimension(:), pointer :: column_names
-   type(SQLITE_STATEMENT)            :: stmt
-   logical                           :: finished
+   type(SQLITE_COLUMN), dimension(:), pointer   :: column_names
+   type(SQLITE_STATEMENT)                       :: stmt
+   logical                                      :: finished
+   character(len=80),dimension(100)             :: tables !!all table names
+   integer                                      :: tableNum !!number of tables
+   integer                                      :: i
 
+   tableNum = 0
+   
    !!prepare
    allocate(column_names(1))
    call sqlite3_column_props(column_names(1),'name',SQLITE_CHAR,10)
-
-   !!clear indexs
-   call sqlite3_prepare_select( db, "sqlite_master", column_names, stmt," where type='index'" )
-   finished = .false.
-   do
-      call sqlite3_next_row( stmt, column_names, finished )
-      if ( finished ) exit
-      call sqlite3_delete_index(db,trim(column_names(1)%char_value))
-   enddo
-
-   !!clear tables
+   
+   !!get all table names first
    call sqlite3_prepare_select( db, "sqlite_master", column_names, stmt," where type='table'" )
    finished = .false.
    do
       call sqlite3_next_row( stmt, column_names, finished )
       if ( finished ) exit
-      call sqlite3_delete_table(db,trim(column_names(1)%char_value))
+      tableNum = tableNum + 1
+      write(tables(tableNum),*) trim(column_names(1)%char_value)      
    enddo
+   call sqlite3_finalize(stmt)
    deallocate(column_names)
-
+   
+   !!start to delete
+   do i=1,tableNum
+       call sqlite3_delete_table(db,tables(i))
+   end do
+     
+   
 end subroutine sqlite3_clear
 
 
@@ -667,6 +697,100 @@ subroutine sqlite3_prepare_select( db, tablename, columns, stmt, extra_clause )
    call sqlite3_prepare( db, command, stmt, columns )
 
 end subroutine sqlite3_prepare_select
+
+!!Get SQL statement for insert to a table
+!!This SQL statement will be used repeatedly to save time
+!!Zhiqiang, 2015-06-11
+subroutine sqlite3_insert_sql_statement( db, tablename, columns, stmt)
+   type(SQLITE_DATABASE)                       :: db
+   character(len=*)                            :: tablename
+   type(SQLITE_COLUMN), dimension(:), target   :: columns
+   type(SQLITE_STATEMENT)                      :: stmt
+   
+   character(len=20+80*size(columns))          :: command
+   type(SQLITE_COLUMN), dimension(:), pointer  :: prepared_columns   
+   integer                                     :: i
+   
+   !
+   ! Prepare the insert statement for this table
+   !
+   write( command, * ) 'insert into ', trim(tablename), ' values(', &
+      ('?,', i = 1,size(columns)-1), '?)'
+
+   call stringtoc( command )
+   prepared_columns => columns
+   call sqlite3_prepare( db, command, stmt, prepared_columns )
+end subroutine sqlite3_insert_sql_statement
+
+!!Insert a row with given sql statement
+!!Zhiqiang, 2015-06-11
+subroutine sqlite3_insert_stmt(db, stmt, columns)
+   type(SQLITE_DATABASE)                       :: db
+   type(SQLITE_COLUMN), dimension(:), target   :: columns
+   type(SQLITE_STATEMENT)                      :: stmt
+   
+   integer                                     :: i
+   integer                                     :: rc
+
+   interface
+      subroutine sqlite3_errmsg_c( handle, errmsg )
+         integer, dimension(*) :: handle
+         character(len=*)      :: errmsg
+      end subroutine sqlite3_errmsg_c
+   end interface
+
+   interface
+      integer function sqlite3_bind_int_c( handle, colidx, value )
+         integer, dimension(*) :: handle
+         integer               :: colidx
+         integer               :: value
+      end function sqlite3_bind_int_c
+   end interface
+
+   interface
+      integer function sqlite3_bind_double_c( handle, colidx, value )
+         use sqlite_types
+         integer, dimension(*) :: handle
+         integer               :: colidx
+         real(kind=dpp)         :: value
+      end function sqlite3_bind_double_c
+   end interface
+
+   interface
+      integer function sqlite3_bind_text_c( handle, colidx, value )
+         integer, dimension(*) :: handle
+         integer               :: colidx
+         character(len=*)      :: value
+      end function sqlite3_bind_text_c
+   end interface
+
+   !
+   ! Bind the values
+   !
+   do i = 1,size(columns)
+      select case (columns(i)%type_set)
+      case (SQLITE_INT)
+         rc = sqlite3_bind_int_c( stmt%stmt_handle, i, columns(i)%int_value )
+      case (SQLITE_DOUBLE)
+         rc = sqlite3_bind_double_c( stmt%stmt_handle, i, columns(i)%double_value )
+      case (SQLITE_CHAR)
+         rc = sqlite3_bind_text_c( stmt%stmt_handle, i, trim(columns(i)%char_value) )
+      end select
+      if ( rc .ne. 0 ) then
+         db%error = rc
+         call sqlite3_errmsg_c( db%db_handle, db%errmsg )
+         call stringtof( db%errmsg )
+      endif
+   enddo
+
+   !
+   ! Actually perform the insert command
+   !
+   call sqlite3_step( stmt, rc )
+   !call sqlite3_clear_bindings( stmt)
+   call sqlite3_reset( stmt )  
+   
+end subroutine sqlite3_insert_stmt
 
 ! sqlite3_insert --
 !    Insert a row into the given table
@@ -878,6 +1002,14 @@ subroutine sqlite3_finalize( stmt )
 
 end subroutine sqlite3_finalize
 
+!!clear bindings
+!!Zhiqiang, 2015-06-11
+subroutine sqlite3_clear_bindings( stmt )
+   type(SQLITE_STATEMENT)                      :: stmt
+
+   call sqlite3_clear_bindings_c( stmt%stmt_handle )
+
+end subroutine sqlite3_clear_bindings
 
 ! sqlite3_reset --
 !    Reset the prepared SQL statement so that it can

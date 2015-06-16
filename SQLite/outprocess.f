@@ -5,7 +5,8 @@
 
           character(len=*):: pname
           integer, dimension(8) :: values
-
+          
+          
           call date_and_time(VALUES=values)
           write ( *, 1004 )  values(1),values(2),values(3),values(5),
      & values(6),values(7),values(8), pname

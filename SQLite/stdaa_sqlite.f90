@@ -313,7 +313,6 @@
           call sqlite3_column_props( colair(1), "HRU", SQLITE_INT)
           call sqlite3_column_props( colair(2), "NO_APP", SQLITE_INT)
           call sqlite3_column_props( colair(3), "VOL_APP_MM", SQLITE_REAL)
-          call sqlite3_delete_table( db, tblname)
           call sqlite3_create_table( db, tblname, colair )
 
           !!write data
@@ -353,7 +352,6 @@
         call sqlite3_column_props( colacp(4+(j-1)*3), acp_yld, SQLITE_REAL)
         call sqlite3_column_props( colacp(5+(j-1)*3), acp_bio, SQLITE_REAL)
       end do
-      call sqlite3_delete_table( db, tblname)
       call sqlite3_create_table( db, tblname, colacp )
 
       !!write data
@@ -387,7 +385,6 @@
       do j = 1, colnum
         call sqlite3_column_props( colahu(4+j), hedahu(j), SQLITE_REAL)
       end do
-      call sqlite3_delete_table( db, tblname)
       call sqlite3_create_table( db, tblname, colahu )
 
       !!write data
@@ -432,7 +429,6 @@
       do j = 1, colnum
         call sqlite3_column_props( colamo(1+j), hedamo(j), SQLITE_REAL)
       end do
-      call sqlite3_delete_table( db, tblname)
       call sqlite3_create_table( db, tblname, colamo )
 
       !!write data
@@ -451,7 +447,6 @@
       allocate(colabn(colnum))
       call sqlite3_column_props( colabn(1), "NAME", SQLITE_CHAR,50)
       call sqlite3_column_props( colabn(2), "VALUE", SQLITE_REAL)
-      call sqlite3_delete_table( db, tblname)
       call sqlite3_create_table( db, tblname, colabn )
 
 !! write average annual stress values

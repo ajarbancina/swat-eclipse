@@ -312,7 +312,7 @@
           endif
         end if
         end if
-        call sqlite3_insert( db, tblhru, colhru )
+        call sqlite3_insert_stmt( db, stmthru, colhru )
       end do
 
       return

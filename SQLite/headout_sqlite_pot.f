@@ -12,9 +12,6 @@
       if (iwtr == 1) then
           tblpot = 'pot'
 
-          !!delete any existing table
-          call sqlite3_delete_table( db, tblpot)
-
           potvaluecolnum = size(hedpot)
           potbasiccolnum = 1 + datecol_num
 
@@ -29,5 +26,6 @@
           end do
           call sqlite3_create_table( db, tblpot, colpot )
          call headout_sqlite_createindex("pot_index",tblpot,"HRU",1)
+         call sqlite3_insert_sql_statement(db,tblpot, colpot, stmtpot)
       end if
       end

@@ -241,7 +241,7 @@
             do ii=1,40
                 call sqlite3_set_column( colwtr(5+ii), pdvas(ii) )
             end do
-            call sqlite3_insert( db, tblwtr, colwtr )
+            call sqlite3_insert_stmt( db, stmtwtr, colwtr )
             !!~~~ SQLite ~~~
           else
           write (29,1000) cropname, j, subnum(j), hruno(j), sb,         

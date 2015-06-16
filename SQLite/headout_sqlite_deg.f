@@ -11,8 +11,6 @@
 
       tbldeg = 'channel_dimension'
 
-      call sqlite3_delete_table( db, tbldeg)
-
       valuecolnum = size(heddeg)
       basiccolnum = 2
       allocate( coldeg(basiccolnum + valuecolnum) )

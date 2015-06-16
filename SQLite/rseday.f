@@ -41,7 +41,7 @@
             do ii = 43,59
                 call sqlite3_set_column( colsed(ii-36), rchdy(ii,j) )
             end do
-            call sqlite3_insert( db, tblsed, colsed )
+            call sqlite3_insert_stmt( db, stmtsed, colsed )
           else
             write (84,5000) j, subgis(j), iida, rch_dakm(j),
      &       rchdy(5,j), rchdy(6,j),(rchdy(ii,j),ii=43,59)

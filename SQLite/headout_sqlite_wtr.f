@@ -26,9 +26,9 @@
              call sqlite3_column_props(colwtr(wtrbasiccolnum+j),
      &                                          hedwtr(j),SQLITE_REAL)
           end do
-          call sqlite3_delete_table( db, tblwtr)
           call sqlite3_create_table( db, tblwtr, colwtr )
          call headout_sqlite_createindex("wtr_index",tblwtr,"HRU",1)
+         call sqlite3_insert_sql_statement(db,tblwtr, colwtr, stmtwtr)
       end if
 
 

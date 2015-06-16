@@ -17,7 +17,6 @@
       !!HRU info
       colnum = 7
       tbl = "hru_info"
-      call sqlite3_delete_table( db, tbl)
       allocate( col(colnum))
       call sqlite3_column_props( col(1), "HRU", SQLITE_INT)
       call sqlite3_column_props( col(2), "SEQ", SQLITE_INT)
@@ -45,7 +44,6 @@
       !!SUB info
       colnum = 3
       tbl = "sub_info"
-      call sqlite3_delete_table( db, tbl)
       allocate( col(colnum))
       call sqlite3_column_props( col(1), "SUB", SQLITE_INT)
       call sqlite3_column_props( col(2), "AREA_KM2", SQLITE_REAL)
@@ -65,7 +63,6 @@
       !!RCH info
       colnum = 2
       tbl = "rch_info"
-      call sqlite3_delete_table( db, tbl)
       allocate( col(colnum))
       call sqlite3_column_props( col(1), "RCH", SQLITE_INT)
       call sqlite3_column_props( col(2), "AREA_KM2", SQLITE_REAL)
@@ -84,7 +81,6 @@
       if(nres > 0) then
           colnum = 1
           tbl = "rsv_info"
-          call sqlite3_delete_table( db, tbl)
           allocate( col(colnum))
           call sqlite3_column_props( col(1), "RES", SQLITE_INT)
           call sqlite3_create_table( db, tbl, col )

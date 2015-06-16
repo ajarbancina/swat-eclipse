@@ -13,10 +13,6 @@
       tblwshd_mn = 'watershed_monthly'
       tblwshd_yr = 'watershed_yearly'
 
-      call sqlite3_delete_table( db, tblwshd_dy)
-      call sqlite3_delete_table( db, tblwshd_mn)
-      call sqlite3_delete_table( db, tblwshd_yr)
-
       valuecolnum = size(hedwshd)
 
       !!daily table

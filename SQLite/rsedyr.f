@@ -39,7 +39,7 @@
             do ii = 42,58
                 call sqlite3_set_column( colsed(ii-37), rchyro(ii,j) )
             end do
-            call sqlite3_insert( db, tblsed, colsed )
+            call sqlite3_insert_stmt( db, stmtsed, colsed )
           else
             write (84,5000) j, subgis(j), iyr, rch_dakm(j),
      &       rchyro(3,j), rchyro(4,j),(rchyro(ii,j),ii=42,58)

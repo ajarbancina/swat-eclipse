@@ -954,6 +954,20 @@
         type(SQLITE_COLUMN), dimension(:), allocatable :: colamo
         !!ave annual basin value
         type(SQLITE_COLUMN), dimension(:), allocatable :: colabn
+        
+        !!insert sqlite statments for better performance
+        !!only add this for some big tables
+        !!small tables will use the normal approach
+        type(SQLITE_STATEMENT)    :: stmtrch
+        type(SQLITE_STATEMENT)    :: stmthru
+        type(SQLITE_STATEMENT)    :: stmtsub
+        type(SQLITE_STATEMENT)    :: stmtrsv
+        type(SQLITE_STATEMENT)    :: stmtwtr
+        type(SQLITE_STATEMENT)    :: stmtsed
+        type(SQLITE_STATEMENT)    :: stmtpot
+        type(SQLITE_STATEMENT)    :: stmtmgt
+        type(SQLITE_STATEMENT)    :: stmtsnu
+        type(SQLITE_STATEMENT)    :: stmtswr
 
         !!table name
         character(len=3) :: tblrch

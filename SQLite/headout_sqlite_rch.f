@@ -11,9 +11,6 @@
       !table name
       tblrch = 'rch'
 
-      !!delete any existing table
-      call sqlite3_delete_table( db, tblrch)
-
       !!The number of common columns
       tblrch_num = 1 + datecol_num
 
@@ -43,5 +40,5 @@
       end if
       call sqlite3_create_table( db, tblrch, colrch )
       call headout_sqlite_createindex("rch_index",tblrch,"RCH",1)
-
+      call sqlite3_insert_sql_statement(db,tblrch, colrch, stmtrch)  
       end

@@ -11,8 +11,6 @@
 
       tblsnu = 'snu'
 
-      call sqlite3_delete_table( db, tblsnu)
-
       if(isol == 1) then
           valuecolnum = size(hedsnu)
           basiccolnum = 4
@@ -29,6 +27,7 @@
           call sqlite3_create_table( db, tblsnu, colsnu )
           call headout_sqlite_createindex( "snu_index",tblsnu,
      &                                            "HRU,YR,MO,DA",0)
+          call sqlite3_insert_sql_statement(db,tblsnu, colsnu, stmtsnu)
       end if
 
       end

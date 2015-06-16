@@ -11,9 +11,6 @@
 
       tblhru = 'hru'
 
-      !!delete any existing table
-      call sqlite3_delete_table( db, tblhru)
-
       !!hru table
       !!The number of common columns
       tblhru_num = 3 + datecol_num
@@ -46,5 +43,5 @@
       end if
       call sqlite3_create_table( db, tblhru, colhru )
       call headout_sqlite_createindex("hru_index",tblhru,"HRU",1)
-
+      call sqlite3_insert_sql_statement(db,tblhru, colhru, stmthru)
       end
