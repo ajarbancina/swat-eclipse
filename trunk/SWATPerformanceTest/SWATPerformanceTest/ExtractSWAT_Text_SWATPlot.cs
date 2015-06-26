@@ -1137,13 +1137,16 @@ namespace SWATPerformanceTest
                 //for(int i=0;i<numRecords;i++)
                 //    Console.WriteLine(string.Format("{0},{1}",data[i,0],data[i,1])); 
             }
+
+            if (dt == null || dt.Rows.Count == 0)
+                throw new Exception("No results!");
             return dt;
         }
 
-        public override DataTable Extract(UnitType source, int id, string column, 
+        public override DataTable Extract(UnitType source, int year, int id, string column, 
             bool addTimeColumn = false, bool forValidation = false)
         {
-            return Extract(source, id, column);
+            return Extract(year, source, id, column);
         }
 
         #endregion

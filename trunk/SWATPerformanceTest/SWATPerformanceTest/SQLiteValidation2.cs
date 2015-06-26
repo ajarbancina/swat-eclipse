@@ -113,9 +113,9 @@ namespace SWATPerformanceTest
         {
             //Read the data first from SQLite and Text files
             string col_sqlite = var;
-            DataTable dtSQLite = _extractSQLite.Extract(source, id, col_sqlite,false,true);
+            DataTable dtSQLite = _extractSQLite.Extract(source, -1, id, col_sqlite,false,true);
             col_sqlite = col_sqlite.Trim();
-            DataTable dtText = _extractText.Extract(source, id, col_sqlite);
+            DataTable dtText = _extractText.Extract(source, id, -1, col_sqlite);
 
             if (dtSQLite == null || dtText == null) return -99.0;
             if (dtSQLite.Rows.Count == 0 || dtText.Rows.Count == 0) return -99.0;
