@@ -74,23 +74,16 @@ namespace SWATPerformanceTest
             return dt;
         }
 
-        protected override DataTable getWholeTable(UnitType source)
+        protected override DataTable readWholeTable(UnitType source)
         {
-            if (!_wholeTables.ContainsKey(source)) //read the whole table first
-            {
-                //initialize the engine
-                FileHelperEngine engine = new FileHelperEngine(getRecordType(source));
+            //initialize the engine
+            FileHelperEngine engine = new FileHelperEngine(getRecordType(source));
 
-                //ignore the average annual outputs
-                engine.Options.IgnoreLastLines = getNumberOfLinesForAverageAnnualOutput(source);
+            //ignore the average annual outputs
+            engine.Options.IgnoreLastLines = getNumberOfLinesForAverageAnnualOutput(source);
 
-                Console.WriteLine("Reading whole table for " + source.ToString());
-                DataTable dt = engine.ReadFileAsDT(getOutputFileFromType(source));
-
-                dt.TableName = source.ToString();
-                _wholeTables.Add(source, dt);
-            }
-            return _wholeTables[source];
+            //Console.WriteLine("Reading whole table for " + source.ToString());
+            return engine.ReadFileAsDT(getOutputFileFromType(source));
         }
 
         ///// <summary>

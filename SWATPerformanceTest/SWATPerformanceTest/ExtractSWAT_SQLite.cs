@@ -48,6 +48,9 @@ namespace SWATPerformanceTest
             {
                 if (_connection == null)
                 {
+                    DateTime startTime = DateTime.Now;
+                    _prepareTime = -99.0;
+
                     if (string.IsNullOrEmpty(_db3Path))
                         throw new System.Exception("The SQLite database doesn't exist!");
 
@@ -60,6 +63,8 @@ namespace SWATPerformanceTest
                     //Open the connection;
                     _connection = new SQLiteConnection(s.ConnectionString);
                     _connection.Open();
+
+                    _prepareTime = DateTime.Now.Subtract(startTime).TotalMilliseconds;
                  }
                 return _connection;
             }
@@ -383,10 +388,10 @@ namespace SWATPerformanceTest
         /// <param name="id"></param>
         /// <param name="var"></param>
         /// <returns></returns>
-        public override DataTable Extract(UnitType source, int id, string var, bool addTimeColumn = false,
+        public override DataTable Extract(UnitType source, int year, int id, string var, bool addTimeColumn = false,
             bool adjustAccuracy = false)
         {
-            return Extract(StartYear, EndYear, source, id, var, addTimeColumn, adjustAccuracy);
+            return Extract(year, source, id, var, addTimeColumn, adjustAccuracy);
         }
 
         /// <summary>
@@ -400,7 +405,9 @@ namespace SWATPerformanceTest
         public DataTable Extract(int year, UnitType source, int id, string var, bool addTimeColumn = false,
             bool adjustAccuracy = false)
         {
-            return Extract(year, year, source, id, var, addTimeColumn, adjustAccuracy);
+            if(year >= this.StartYear && year <= this.EndYear)
+                return Extract(year,year, source, id, var, addTimeColumn, adjustAccuracy);
+            throw new Exception("Wrong year " + year.ToString());
         }
 
         private string getSQL(int requestStartYear, int requestFinishYear,
@@ -465,6 +472,8 @@ namespace SWATPerformanceTest
             bool addTimeColumn = false,
             bool adjustAccuracy = false)
         {
+            SQLiteConnection con = Connection; //open the database before counting the time
+
             //start time
             //the time to read data from SQLite include
             //1. SQL construction

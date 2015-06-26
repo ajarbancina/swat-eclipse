@@ -38,6 +38,7 @@ namespace SWATPerformanceTest
         }
 
         public int StartYear { get { return _startYear; } }
+        public int EndYear { get { return _endYear; } }
         public OutputIntervalType OutputInterval { get { return _interval; } }
 
         public int NumberOfRecordForEachUnit

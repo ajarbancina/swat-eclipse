@@ -7,10 +7,10 @@ namespace SWATPerformanceTest
 {
     enum UnitType
     {
-        RCH,
-        SUB,
-        HRU,
-        WATER,
-        RSV
+        RCH = 1,
+        SUB = 0,
+        HRU = 2,
+        WATER = 3,
+        RSV = 4
     }
 }

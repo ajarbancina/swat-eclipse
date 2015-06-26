@@ -181,7 +181,7 @@ namespace SWATPerformanceTest
             string sqlitePath = Path.Combine(workingpath, "result_627_monthly.db3");
 
             DataReadingPerformance per = new DataReadingPerformance(workingpath);
-            string info = per.Read();
+            string info = per.Read(true);
             Console.WriteLine(info);
             Debug.WriteLine(info);
             
@@ -306,17 +306,17 @@ namespace SWATPerformanceTest
         static void TestExtractFromText_FileDriver(string txtinoutPath)
         {
             ExtractSWAT_Text_FileDriver ex = new ExtractSWAT_Text_FileDriver(txtinoutPath);
-            ex.Extract(UnitType.SUB, 1, "ETmm");
-            ex.Extract(UnitType.SUB, 4, "ETmm");
-            ex.Extract(UnitType.SUB, 10, "ETmm");
+            //ex.Extract(UnitType.SUB, 1, "ETmm");
+            //ex.Extract(UnitType.SUB, 4, "ETmm");
+            //ex.Extract(UnitType.SUB, 10, "ETmm");
 
-            ex.Extract(UnitType.HRU, 1, "ETmm");
-            ex.Extract(UnitType.HRU, 4, "ETmm");
-            ex.Extract(UnitType.HRU, 10, "ETmm");
+            //ex.Extract(UnitType.HRU, 1, "ETmm");
+            //ex.Extract(UnitType.HRU, 4, "ETmm");
+            //ex.Extract(UnitType.HRU, 10, "ETmm");
 
-            ex.Extract(UnitType.RCH, 1, "FLOW_OUTcms");
-            ex.Extract(UnitType.RCH, 4, "FLOW_OUTcms");
-            ex.Extract(UnitType.RCH, 10, "FLOW_OUTcms");
+            //ex.Extract(UnitType.RCH, 1, "FLOW_OUTcms");
+            //ex.Extract(UnitType.RCH, 4, "FLOW_OUTcms");
+            //ex.Extract(UnitType.RCH, 10, "FLOW_OUTcms");
         }
 
         /// <summary>
@@ -394,24 +394,24 @@ namespace SWATPerformanceTest
                 new ExtractSWAT_SQLite(@"E:\SWAT\Elie\Elie\Scenarios\default\TxtInOut\result_627_daily.db3"))
             {
                 Console.WriteLine("******************** First Try ********************");
-                extract.Extract(UnitType.RCH, 1, "FLOW_OUTcms");//not case sensitive
-                extract.Extract(1993, UnitType.RCH, 1, "FLOW_OUTcms");
-                extract.Extract(2000, UnitType.RCH, 1, "FLOW_OUTcms");
-                extract.Extract(2007, UnitType.RCH, 1, "FLOW_OUTcms");
-                extract.Extract(UnitType.HRU, 1, "ETmm");
-                extract.Extract(1993, UnitType.HRU, 1, "ETmm");
-                extract.Extract(2000, UnitType.HRU, 1, "ETmm");
-                extract.Extract(2007, UnitType.HRU, 1, "ETmm");
+                //extract.Extract(UnitType.RCH, 1, "FLOW_OUTcms");//not case sensitive
+                //extract.Extract(1993, UnitType.RCH, 1, "FLOW_OUTcms");
+                //extract.Extract(2000, UnitType.RCH, 1, "FLOW_OUTcms");
+                //extract.Extract(2007, UnitType.RCH, 1, "FLOW_OUTcms");
+                //extract.Extract(UnitType.HRU, 1, "ETmm");
+                //extract.Extract(1993, UnitType.HRU, 1, "ETmm");
+                //extract.Extract(2000, UnitType.HRU, 1, "ETmm");
+                //extract.Extract(2007, UnitType.HRU, 1, "ETmm");
 
-                Console.WriteLine("******************** Second Try ********************");
-                extract.Extract(UnitType.RCH, 1, "FLOW_OUTcms");//not case sensitive
-                extract.Extract(1993, UnitType.RCH, 1, "FLOW_OUTcms");
-                extract.Extract(2000, UnitType.RCH, 1, "FLOW_OUTcms");
-                extract.Extract(2007, UnitType.RCH, 1, "FLOW_OUTcms");
-                extract.Extract(UnitType.HRU, 1, "ETmm");
-                extract.Extract(1993, UnitType.HRU, 1, "ETmm");
-                extract.Extract(2000, UnitType.HRU, 1, "ETmm");
-                extract.Extract(2007, UnitType.HRU, 1, "ETmm");
+                //Console.WriteLine("******************** Second Try ********************");
+                //extract.Extract(UnitType.RCH, 1, "FLOW_OUTcms");//not case sensitive
+                //extract.Extract(1993, UnitType.RCH, 1, "FLOW_OUTcms");
+                //extract.Extract(2000, UnitType.RCH, 1, "FLOW_OUTcms");
+                //extract.Extract(2007, UnitType.RCH, 1, "FLOW_OUTcms");
+                //extract.Extract(UnitType.HRU, 1, "ETmm");
+                //extract.Extract(1993, UnitType.HRU, 1, "ETmm");
+                //extract.Extract(2000, UnitType.HRU, 1, "ETmm");
+                //extract.Extract(2007, UnitType.HRU, 1, "ETmm");
             }            
         }
 

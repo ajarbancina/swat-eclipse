@@ -18,6 +18,25 @@ namespace SWATPerformanceTest
         /// </summary>
         public double ExtractTime { get { return _extractTime; } }
 
+
+        protected double _prepareTime = -99.0;
+
+        /// <summary>
+        /// Time used before the data could be read
+        /// </summary>
+        /// <remarks>
+        /// For SQLite, it's spent on opening the database connection.
+        /// For File Driver and File helper, it's spent on loading the whole datatable to memory
+        /// For SWAT Plot, it's zero
+        /// </remarks>
+        public double PrepareTime
+        {
+            get
+            {
+                return _prepareTime;
+            }
+        }
+
         /// <summary>
         /// Extract data from given source for given id and column
         /// </summary>
@@ -27,7 +46,7 @@ namespace SWATPerformanceTest
         /// <param name="addTimeColumn">If need to calcualte the date for each data record</param>
         /// <param name="forValidation">If this is for validation. The daily HRU table won't be cached to avoid memory problem.</param>
         /// <returns>Data Table</returns>
-        public virtual DataTable Extract(UnitType source, int id, string column, 
+        public virtual DataTable Extract(UnitType source, int year, int id, string column, 
             bool addTimeColumn = false, bool forValidation = false)
         {
             return null;

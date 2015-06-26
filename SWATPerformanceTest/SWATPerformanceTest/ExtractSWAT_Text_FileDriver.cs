@@ -149,25 +149,21 @@ namespace SWATPerformanceTest
         {
             return base.extractDailyHRU(column);
         }
-        protected override DataTable getWholeTable(UnitType source)
-        {
-            if (!_wholeTables.ContainsKey(source)) //read the whole table first
+        protected override DataTable readWholeTable(UnitType source)
+        {              
+            string sql = getSQL(-1, -1, source, -1, "*");
+
+            DataTable dt = Extract(sql);
+
+            //remove the average annual if necessary
+            if (hasAverageAnnual(source)) 
             {
-                string sql = getSQL(-1, -1, source, -1, "*");
-                DataTable dt = Extract(sql);
-
-                //remove the average annual if necessary
-                if (hasAverageAnnual(source)) 
-                {
-                    int ignorenum = getNumberOfLinesForAverageAnnualOutput(source);
-                    for(int i=0;i<ignorenum;i++)
-                        dt.Rows.RemoveAt(dt.Rows.Count - 1); 
-                }
-
-                dt.TableName = source.ToString();
-                _wholeTables.Add(source, dt);
+                int ignorenum = getNumberOfLinesForAverageAnnualOutput(source);
+                for(int i=0;i<ignorenum;i++)
+                    dt.Rows.RemoveAt(dt.Rows.Count - 1); 
             }
-            return _wholeTables[source];
+
+            return dt;
         }
 
         private DataTable Extract(string query)
