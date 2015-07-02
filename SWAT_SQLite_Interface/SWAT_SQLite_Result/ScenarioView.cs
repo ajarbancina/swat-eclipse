@@ -52,6 +52,12 @@ namespace SWAT_SQLite_Result
             //change output interval
             _scenario.modifyOutputInterval(interval);
 
+            //close the connection with the databse
+            //or the file can't be deleted 
+            //error severe (46): Inconsistent OPEN/CLOSE parameters will be given
+            ArcSWAT.ScenarioResult r = _scenario.getModelResult(modelType, interval);
+            if (r != null) r.close();
+
             //start to run the model
             Process myProcess = new Process();
             try
@@ -86,6 +92,7 @@ namespace SWAT_SQLite_Result
                 updateMessage("Runing " + ModelType.ToString() + " in " + _scenario.ModelFolder);
                 myProcess.Start();
                 myProcess.BeginOutputReadLine();
+                myProcess.BeginErrorReadLine();
                 //myProcess.WaitForExit();
             }
             catch (Exception e)

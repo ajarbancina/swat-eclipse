@@ -103,6 +103,12 @@ namespace SWAT_SQLite_Result.ArcSWAT
             return null;
         }
 
+        public void close()
+        {
+            foreach (ScenarioResult r in _results.Values)
+                r.close();
+        }
+
         /// <summary>
         /// Re-read results when it's simulated again.
         /// </summary>
