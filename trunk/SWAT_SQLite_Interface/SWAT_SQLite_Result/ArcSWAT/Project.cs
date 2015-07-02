@@ -41,6 +41,12 @@ namespace SWAT_SQLite_Result.ArcSWAT
             _observation_yearly = new ObservationData(Folder + DEFAULT_OBSERVATION_DATA_FILE_YEARLY);
         }
 
+        public void close()
+        {
+            foreach (Scenario s in _scenarios.Values)
+                s.close();
+        }
+
         public override string ToString()
         {
             StringBuilder sb = new StringBuilder();

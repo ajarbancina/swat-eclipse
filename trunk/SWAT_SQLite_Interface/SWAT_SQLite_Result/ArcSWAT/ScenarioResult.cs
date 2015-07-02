@@ -22,6 +22,11 @@ namespace SWAT_SQLite_Result.ArcSWAT
           
         }
 
+        public void close()
+        {
+            Query.CloseConnection(DatabasePath);
+        }
+
         private Scenario _parentScenario = null;
 
         public Scenario Scenario { get { return _parentScenario; } }

@@ -26,6 +26,11 @@ namespace SWAT_SQLite_Result
 
         private void SWATSQLiteFrm_Load(object sender, EventArgs e)
         {
+            this.FormClosing += (s, ee) =>
+                {
+                    if (_prj != null) _prj.close();
+                };
+
             projectTree1.onResultLevelChanged += (scenario, modelType, type) =>
                 {
                     switchView(scenario.Scenario, modelType, scenario.Interval, type);
@@ -266,6 +271,7 @@ namespace SWAT_SQLite_Result
         private void openProject(string prjPath)
         {
             if (_prj != null && prjPath.Equals(_prj.Folder)) return;
+            if (_prj != null) _prj.close();
 
             try
             {
