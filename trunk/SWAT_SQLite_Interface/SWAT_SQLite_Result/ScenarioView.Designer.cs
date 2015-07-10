@@ -40,6 +40,7 @@
             this.bBasinBsn = new System.Windows.Forms.Button();
             this.bFigFig = new System.Windows.Forms.Button();
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
+            this.bDB3 = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // bOpenModelFolder
@@ -95,7 +96,7 @@
             // lblSimulationTime
             // 
             this.lblSimulationTime.AutoSize = true;
-            this.lblSimulationTime.Location = new System.Drawing.Point(772, 7);
+            this.lblSimulationTime.Location = new System.Drawing.Point(854, 7);
             this.lblSimulationTime.Name = "lblSimulationTime";
             this.lblSimulationTime.Size = new System.Drawing.Size(35, 13);
             this.lblSimulationTime.TabIndex = 8;
@@ -155,10 +156,20 @@
             // 
             this.backgroundWorker1.WorkerReportsProgress = true;
             // 
+            // bDB3
+            // 
+            this.bDB3.Location = new System.Drawing.Point(772, 3);
+            this.bDB3.Name = "bDB3";
+            this.bDB3.Size = new System.Drawing.Size(75, 23);
+            this.bDB3.TabIndex = 14;
+            this.bDB3.Text = "Result DB";
+            this.bDB3.UseVisualStyleBackColor = true;
+            // 
             // ScenarioView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.bDB3);
             this.Controls.Add(this.bFigFig);
             this.Controls.Add(this.bBasinBsn);
             this.Controls.Add(this.bFileCIO);
@@ -192,5 +203,6 @@
         private System.Windows.Forms.Button bBasinBsn;
         private System.Windows.Forms.Button bFigFig;
         private System.ComponentModel.BackgroundWorker backgroundWorker1;
+        private System.Windows.Forms.Button bDB3;
     }
 }

@@ -36,14 +36,14 @@
             this.subbasinView1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.subbasinView1.Location = new System.Drawing.Point(0, 0);
             this.subbasinView1.Name = "subbasinView1";
-            this.subbasinView1.Size = new System.Drawing.Size(956, 826);
+            this.subbasinView1.Size = new System.Drawing.Size(956, 750);
             this.subbasinView1.TabIndex = 0;
             // 
             // Form2
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(956, 826);
+            this.ClientSize = new System.Drawing.Size(956, 750);
             this.Controls.Add(this.subbasinView1);
             this.Name = "Form2";
             this.Text = "Form2";

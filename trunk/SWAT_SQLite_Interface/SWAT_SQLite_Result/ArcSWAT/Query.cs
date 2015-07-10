@@ -314,6 +314,25 @@ namespace SWAT_SQLite_Result.ArcSWAT
     /// </summary>
     public static class SQLite
     {
+        public static void exeCmdWithoutTransaction(string pathDB, string sql)
+        {
+            if (string.IsNullOrEmpty(sql)) return;
+
+            SQLiteConnection conn = Query.OpenConnection(pathDB) as SQLiteConnection;
+            if (conn != null)
+                using (SQLiteCommand c = new SQLiteCommand(sql, conn))
+                {
+                    try
+                    {
+                        c.ExecuteNonQuery();
+                    }
+                    catch (System.Exception e)
+                    {
+                        System.Diagnostics.Debug.WriteLine(e.Message);
+                    }
+                }
+        }
+
         public static void insert(string pathDB, string sql)
         {
             if (string.IsNullOrEmpty(sql)) return;
