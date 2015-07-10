@@ -18,6 +18,8 @@ namespace SWAT_SQLite_Result
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            testSQLiteClear();
+            return;
             ArcSWAT.Project p = new ArcSWAT.Project(@"C:\Swat\ArcSWAT\Databases\Example1_model"); //University
             //ArcSWAT.Project p = new ArcSWAT.Project(@"C:\Users\yuz\Downloads\Example1_model");   //AAFC
             //richTextBox1.Text = p.ToString();
@@ -32,6 +34,23 @@ namespace SWAT_SQLite_Result
 
             //tableResultsCtrl1.SWATUnits = p.Scenarios["Default"].getModelResult(ArcSWAT.SWATModelType.SWAT_488).Subbasins;
             p.Scenarios["Default"].modifyOutputInterval(ArcSWAT.SWATResultIntervalType.MONTHLY);
+        }
+
+        private void testSQLiteClear()
+        {
+            string dbPath = @"C:\Users\yuz\Downloads\result_canswat_monthly.db3";
+
+            //get all the table names
+            //DataTable dt = ArcSWAT.Query.GetDataTable("select name from sqlite_master where type = 'table'", dbPath);
+            //foreach (DataRow r in dt.Rows)
+            //{
+            //    string tblName = r[0].ToString();
+            //    System.Diagnostics.Debug.WriteLine(tblName);
+            //    ArcSWAT.SQLite.insert(dbPath, "DROP TABLE IF EXISTS " + tblName);
+            //}
+            ArcSWAT.SQLite.exeCmdWithoutTransaction(dbPath, "ANALYZE");
+            //ArcSWAT.SQLite.exeCmdWithoutTransaction(dbPath, "VACUUM");
+            ArcSWAT.Query.CloseConnection(dbPath);
         }
     }
 }

@@ -232,7 +232,7 @@ namespace SWAT_SQLite_Result
         {
             string csvPath = SWAT_SQLite.InstallationFolder + @"exports\";
             if (!System.IO.Directory.Exists(csvPath)) System.IO.Directory.CreateDirectory(csvPath);
-            csvPath += string.Format("export_{0:yyyyMMddhhmmss}.csv", DateTime.Now);
+            csvPath += string.Format("export_chart_{0:yyyyMMddhhmmss}.csv", DateTime.Now);
             using (System.IO.StreamWriter writer = new System.IO.StreamWriter(csvPath))
             {
                 string output = _xColName;

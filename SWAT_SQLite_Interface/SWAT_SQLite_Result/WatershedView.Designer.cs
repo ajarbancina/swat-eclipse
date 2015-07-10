@@ -162,7 +162,6 @@
             // 
             // compareCtrl1
             // 
-            //this.compareCtrl1.HasObervedData = false;
             this.compareCtrl1.Location = new System.Drawing.Point(3, 3);
             this.compareCtrl1.Name = "compareCtrl1";
             this.compareCtrl1.Size = new System.Drawing.Size(270, 65);
@@ -189,6 +188,7 @@
             // 
             chartArea1.Name = "ChartArea1";
             this.outputDisplayChart1.ChartAreas.Add(chartArea1);
+            this.outputDisplayChart1.Dock = System.Windows.Forms.DockStyle.Fill;
             legend1.Name = "Legend1";
             this.outputDisplayChart1.Legends.Add(legend1);
             this.outputDisplayChart1.Location = new System.Drawing.Point(0, 0);
